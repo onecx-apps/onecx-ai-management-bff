@@ -1,0 +1,8 @@
+include::onecx-ai-bff-attributes.adoc[opts=optional]
+
+== onecx-ai-bff
+
+include::docs.adoc[opts=optional]
+
+
+include::onecx-ai-bff-docs.adoc[opts=optional]
