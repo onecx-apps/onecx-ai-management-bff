@@ -172,6 +172,25 @@
                     </configOptions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ai-svc-internal</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/onecx-apps/onecx-ai-management-svc/refs/heads/main/src/main/openapi/onecx-ai-internal-openapi.yaml</url>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>ai_management_internal_openapi.yaml</outputFileName>
+                            <skipCache>true</skipCache>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

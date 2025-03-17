@@ -20,8 +20,8 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "modificationCount", ignore = true)
     AIKnowledgeDocumentDTO mapById(AIKnowledgeDocument aiKnowledgeDocument);
 
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
+    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
     @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
     UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
 

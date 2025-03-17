@@ -16,7 +16,7 @@ onecx.permissions.application-id=${quarkus.application.name}
 %prod.quarkus.rest-client.onecx_ai_svc.url=http://onecx-ai-svc:8080
 org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
 %prod.quarkus.oidc-client.client-id=${quarkus.application.name}
-quarkus.openapi-generator.codegen.input-base-dir=src/main/openapi/client
+quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
 quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.config-key=onecx_ai_service
 quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.base-package=gen.org.tkit.onecx.ai.mgmt.client
 quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.return-response=true
@@ -71,6 +71,8 @@ app:
             defaultClientScopes: [ocx-ai:all, ocx-pm:read]
 
 ----
+
+---
 
 read]
 
