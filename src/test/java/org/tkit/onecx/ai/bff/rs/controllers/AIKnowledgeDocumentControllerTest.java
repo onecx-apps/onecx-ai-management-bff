@@ -5,7 +5,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-// static imports
 import java.time.OffsetDateTime;
 
 import jakarta.ws.rs.HttpMethod;
@@ -24,6 +23,9 @@ import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
 import gen.org.tkit.onecx.ai.mgmt.client.model.DocumentStatusType;
+//import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
+//import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
+//import gen.org.tkit.onecx.ai.mgmt.client.model.DocumentStatusType;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -63,7 +65,7 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
         // Arrage
         var offsetDateTime = OffsetDateTime.parse("2025-03-13T14:45:52.423454002+01:00");
         AIKnowledgeDocument fakeData = new AIKnowledgeDocument();
-        fakeData.setVersion(1);
+        fakeData.setModificationCount(0);
         fakeData.setCreationDate(offsetDateTime);
         fakeData.creationUser("FakeUser");
         fakeData.setModificationDate(offsetDateTime);
@@ -130,7 +132,8 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
     void updateAIKNowledgeDocument() {
         // Arrage
         // create Document DTO
-        AIKnowledgeDocumentDTO documentDTO = new AIKnowledgeDocumentDTO();
+        AIKnowledgeDocumentDTO documentDTO;
+        documentDTO = new AIKnowledgeDocumentDTO();
         documentDTO.setId("1");
         documentDTO.setDocumentRefId("4e1c07bb-ef34-4017-b690-e5dfe3960590");
         documentDTO.setName("Test AIKnowledge Document 1");
@@ -141,6 +144,11 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
         UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO;
         updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
         updateAIKnowledgeDocumentDTO.setaIKnowledgeDocumentData(documentDTO);
+        //            updateAIKnowledgeDocumentDTO.setId("1");
+        //            updateAIKnowledgeDocumentDTO.setDocumentRefId("4e1c07bb-ef34-4017-b690-e5dfe3960590");
+        //            updateAIKnowledgeDocumentDTO.setName("Test AIKnowledge Document 1");
+        //            updateAIKnowledgeDocumentDTO.setStatus(UpdateAIKnowledgeDocumentDTO.StatusEnum.PROCESSING);
+        //            updateAIKnowledgeDocumentDTO.setModificationCount(1);
 
         String testId = "1";
         mockServerClient.when(
@@ -148,11 +156,12 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
                         .withMethod(HttpMethod.PUT))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
-                        .withStatusCode(Response.Status.NO_CONTENT.getStatusCode())
+                        .withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON));
 
         // Bff call DTO
         // Act
+        //            ValidatableResponse response;
         var response = given()
                 .when()
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
@@ -161,7 +170,8 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .body(updateAIKnowledgeDocumentDTO)
                 .put(testId)
                 .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UpdateAIKnowledgeDocumentDTO.class);
 
         // Assert
         Assertions.assertNotNull(response);
