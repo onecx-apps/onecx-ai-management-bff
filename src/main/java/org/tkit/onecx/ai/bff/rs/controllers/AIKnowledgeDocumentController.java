@@ -16,7 +16,10 @@ import org.tkit.onecx.ai.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.bff.rs.internal.AiKnowledgeDocumentBffServiceApiService;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.*;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentSearchRequestDTO;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.CreateAIKnowledgeDocumentDTO;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.mgmt.client.api.AiKnowledgeDocumentInternalApi;
 import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
 import gen.org.tkit.onecx.ai.mgmt.client.model.UpdateAIKnowledgeDocumentRequest;
@@ -71,12 +74,13 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     @Override
     public Response updateAIKnowledgeDocument(String id, UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO) {
         try {
-            // Map dto to request
+            //  Map dto to request
             UpdateAIKnowledgeDocumentRequest updateAIKnowledgeDocumentRequest = documentMapper
                     .mapUpdate(updateAIKnowledgeDocumentDTO);
+            // and update AIKnowledge Document
             try (Response updateResponse = aiKnowledgeDocumentApi.updateKnowledgeDocument(id,
                     updateAIKnowledgeDocumentRequest)) {
-                return Response.status(updateResponse.getStatus()).build();
+                return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeDocumentDTO).build();
             }
         } catch (WebApplicationException ex) {
             return Response.status(ex.getResponse().getStatus())
@@ -88,5 +92,4 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     public Response restException(ClientWebApplicationException ex) {
         return exceptionMapper.clientException(ex);
     }
-
 }

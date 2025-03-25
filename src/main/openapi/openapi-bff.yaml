@@ -84,7 +84,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateAIKnowledgeDocument"
       responses:
-        "204":
+        "200":
           description: AIKnowledgeDocument updated
           headers:
             Location:
@@ -220,18 +220,31 @@ components:
     UpdateAIKnowledgeDocument:
       type: object
       required:
-        - aIKnowledgeDocumentData
+        - documentRefId
+        - modificationCount
       properties:
-        aIKnowledgeDocumentData:
-          $ref: "#/components/schemas/AIKnowledgeDocument"
+        id:
+          type: string
+        name:
+          type: string
+        documentRefId:
+          type: string
+        status:
+          type: string
+          enum:
+            - NEW
+            - PROCESSING
+            - EMBEDDED
+        modificationCount:
+          type: integer
+          format: int32
+#          $ref: "#/components/schemas/AIKnowledgeDocument"
     AIKnowledgeDocumentCreateResponse:
       type: object
       required:
         - name
         - documentRefId
       properties:
-        id:
-          type: string
         name:
           type: string
         documentRefId:
