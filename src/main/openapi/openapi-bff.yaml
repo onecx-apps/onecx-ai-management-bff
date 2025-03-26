@@ -124,6 +124,11 @@ paths:
       tags:
         - AIKnowledgeDocumentBffService
       description: This operation performs a create.
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -167,11 +172,15 @@ components:
         documentRefId:
           type: string
         status:
-          type: string
-          enum:
-            - NEW
-            - PROCESSING
-            - EMBEDDED
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
+
+    AIKnowledgeDocumentStatusType:
+      type: string
+      enum:
+        - NEW
+        - PROCESSING
+        - EMBEDDED
+
     AIKnowledgeDocumentSearchRequest:
       type: object
       properties:
@@ -185,10 +194,8 @@ components:
         documentRefId:
           type: string
         status:
-          enum:
-            - NEW
-            - PROCESSING
-            - EMBEDDED
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
+
     AIKnowledgeDocumentSearchResponse:
       type: object
       required:
@@ -203,6 +210,7 @@ components:
           type: integer
           format: int32
           description: Total number of results on the server.
+
     GetAIKnowledgeDocumentByIdResponse:
       type: object
       required:
@@ -210,13 +218,15 @@ components:
       properties:
         result:
           $ref: "#/components/schemas/AIKnowledgeDocument"
+
     CreateAIKnowledgeDocument:
       type: object
       required:
         - aIKnowledgeDocumentData
       properties:
         aIKnowledgeDocumentData:
-          $ref: "#/components/schemas/AIKnowledgeDocument"
+          $ref: "#/components/schemas/AIKnowledgeDocumentCreateRequest"
+
     UpdateAIKnowledgeDocument:
       type: object
       required:
@@ -230,31 +240,40 @@ components:
         documentRefId:
           type: string
         status:
-          type: string
-          enum:
-            - NEW
-            - PROCESSING
-            - EMBEDDED
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
         modificationCount:
           type: integer
           format: int32
-#          $ref: "#/components/schemas/AIKnowledgeDocument"
-    AIKnowledgeDocumentCreateResponse:
+
+    AIKnowledgeDocumentCreateRequest:
       type: object
       required:
         - name
         - documentRefId
+        - status
       properties:
         name:
           type: string
         documentRefId:
           type: string
         status:
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
+
+    AIKnowledgeDocumentCreateResponse:
+      type: object
+      required:
+        - name
+        - documentRefId
+      properties:
+        id:
           type: string
-          enum:
-            - NEW
-            - PROCESSING
-            - EMBEDDED
+        name:
+          type: string
+        documentRefId:
+          type: string
+        status:
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
+
     AIKnowledgeDocumentUpdateResponse:
       type: object
       required:
@@ -268,11 +287,7 @@ components:
         documentRefId:
           type: string
         status:
-          type: string
-          enum:
-            - NEW
-            - PROCESSING
-            - EMBEDDED
+          $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
 
     ProblemDetailResponse:
       type: object
@@ -285,10 +300,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailParam'
+
     invalidParams:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
+
     ProblemDetailParam:
         type: object
         properties:
@@ -296,6 +313,7 @@ components:
             type: string
           value:
             type: string
+
     ProblemDetailInvalidParam:
         type: object
         properties:

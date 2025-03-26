@@ -20,6 +20,7 @@ import org.tkit.onecx.ai.bff.rs.AbstractTest;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentStatusTypeDTO;
 import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
 import gen.org.tkit.onecx.ai.mgmt.client.model.DocumentStatusType;
@@ -134,7 +135,7 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
         updateAIKnowledgeDocumentDTO.setId("1");
         updateAIKnowledgeDocumentDTO.setDocumentRefId("4e1c07bb-ef34-4017-b690-e5dfe3960590");
         updateAIKnowledgeDocumentDTO.setName("Test AIKnowledge Document 1");
-        updateAIKnowledgeDocumentDTO.setStatus(UpdateAIKnowledgeDocumentDTO.StatusEnum.PROCESSING);
+        updateAIKnowledgeDocumentDTO.setStatus(AIKnowledgeDocumentStatusTypeDTO.PROCESSING);
         updateAIKnowledgeDocumentDTO.setModificationCount(1);
 
         String testId = "1";
@@ -170,7 +171,7 @@ public class AIKnowledgeDocumentControllerTest extends AbstractTest {
         updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
         updateAIKnowledgeDocumentDTO.setId("1");
         updateAIKnowledgeDocumentDTO.setName("Test AIKnowledge Document 1");
-        updateAIKnowledgeDocumentDTO.setStatus(UpdateAIKnowledgeDocumentDTO.StatusEnum.EMBEDDED);
+        updateAIKnowledgeDocumentDTO.setStatus(AIKnowledgeDocumentStatusTypeDTO.EMBEDDED);
 
         String testId = "1";
         mockServerClient.when(

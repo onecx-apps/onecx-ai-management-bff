@@ -22,6 +22,7 @@ import gen.org.tkit.onecx.ai.bff.rs.internal.model.CreateAIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
 import gen.org.tkit.onecx.ai.mgmt.client.api.AiKnowledgeDocumentInternalApi;
 import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
+import gen.org.tkit.onecx.ai.mgmt.client.model.CreateAIKnowledgeDocumentRequest;
 import gen.org.tkit.onecx.ai.mgmt.client.model.UpdateAIKnowledgeDocumentRequest;
 import gen.org.tkit.onecx.permission.model.ProblemDetailResponse;
 
@@ -46,8 +47,20 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO) {
-        return null;
+    public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO, String id) {
+        try {
+            // Map dto to request
+            CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
+                    .mapCreate(createAIKnowledgeDocumentDTO);
+            // then send the creation request
+            try (Response createResponse = aiKnowledgeDocumentApi.createKnowledgeDocument(id,
+                    createAIKnowledgeDocumentRequest)) {
+                return Response.status(createResponse.getStatus()).entity(createAIKnowledgeDocumentDTO).build();
+            }
+        } catch (WebApplicationException ex) {
+            return Response.status(ex.getResponse().getStatus())
+                    .entity(documentMapper.mapErrorDetails(ex.getResponse().readEntity(ProblemDetailResponse.class))).build();
+        }
     }
 
     @Override
