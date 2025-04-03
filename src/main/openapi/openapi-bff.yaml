@@ -15,17 +15,18 @@ paths:
         This operation performs a search based on provided search criteria.
         Search for AIKnowledgeDocument results.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AIKnowledgeDocumentSearchRequest"
+              $ref: "#/components/schemas/AIKnowledgeDocumentSearchCriteria"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AIKnowledgeDocumentSearchResponse"
+                $ref: "#/components/schemas/AIKnowledgeDocumentSearchPageResult"
         "400":
           description: Bad request
         "500":
@@ -181,22 +182,33 @@ components:
         - PROCESSING
         - EMBEDDED
 
-    AIKnowledgeDocumentSearchRequest:
+    AIKnowledgeDocumentSearchCriteria:
       type: object
       properties:
-        limit:
-          type: integer
-          maximum: 2500
-        id:
-          type: string
+#        limit:
+#          type: integer
+#          maximum: 2500
+#        id:
+#          type: string
         name:
           type: string
         documentRefId:
           type: string
         status:
           $ref: '#/components/schemas/AIKnowledgeDocumentStatusType'
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 10
+          maximum: 100
+          type: integer
 
-    AIKnowledgeDocumentSearchResponse:
+    AIKnowledgeDocumentSearchPageResult:
       type: object
       required:
         - results
@@ -210,6 +222,15 @@ components:
           type: integer
           format: int32
           description: Total number of results on the server.
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
 
     GetAIKnowledgeDocumentByIdResponse:
       type: object
@@ -300,24 +321,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailParam'
-
-    invalidParams:
+        invalidParams:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
-
     ProblemDetailParam:
-        type: object
-        properties:
-          key:
-            type: string
-          value:
-            type: string
-
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
     ProblemDetailInvalidParam:
-        type: object
-        properties:
-          name:
-            type: string
-          message:
-            type: string
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string

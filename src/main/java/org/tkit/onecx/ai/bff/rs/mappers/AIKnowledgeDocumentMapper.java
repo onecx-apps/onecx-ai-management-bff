@@ -4,24 +4,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.CreateAIKnowledgeDocumentDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
-import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
-import gen.org.tkit.onecx.ai.mgmt.client.model.CreateAIKnowledgeDocumentRequest;
-import gen.org.tkit.onecx.ai.mgmt.client.model.UpdateAIKnowledgeDocumentRequest;
-import gen.org.tkit.onecx.permission.model.ProblemDetailResponse;
-
-/**
- * @author tchanad
- * @project onecx-ai-management-bff
- */
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.*;
+import gen.org.tkit.onecx.ai.mgmt.client.model.*;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public interface AIKnowledgeDocumentMapper {
 
-    AIKnowledgeDocumentDTO mapById(AIKnowledgeDocument aiKnowledgeDocument);
+    AIKnowledgeDocumentDTO map(AIKnowledgeDocument aiKnowledgeDocument);
 
     UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
 
@@ -30,6 +19,10 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
     CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
 
-    @Mapping(target = "removeParamsItem", ignore = true)
-    ProblemDetailResponseDTO mapErrorDetails(ProblemDetailResponse problemDetailResponse);
+    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO);
+
+    @Mapping(target = "totalNumberOfResults", source = "totalElements")
+    @Mapping(target = "results", source = "stream")
+    @Mapping(target = "removeResultsItem", ignore = true)
+    AIKnowledgeDocumentSearchPageResultDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
 }
