@@ -3,11 +3,12 @@ package org.tkit.onecx.ai.bff.rs.controllers;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.ClientWebApplicationException;
+import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +17,10 @@ import org.tkit.onecx.ai.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.bff.rs.internal.AiKnowledgeDocumentBffServiceApiService;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.AIKnowledgeDocumentSearchRequestDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.CreateAIKnowledgeDocumentDTO;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.UpdateAIKnowledgeDocumentDTO;
+import gen.org.tkit.onecx.ai.bff.rs.internal.model.*;
 import gen.org.tkit.onecx.ai.mgmt.client.api.AiKnowledgeDocumentInternalApi;
-import gen.org.tkit.onecx.ai.mgmt.client.model.AIKnowledgeDocument;
-import gen.org.tkit.onecx.ai.mgmt.client.model.CreateAIKnowledgeDocumentRequest;
-import gen.org.tkit.onecx.ai.mgmt.client.model.UpdateAIKnowledgeDocumentRequest;
-import gen.org.tkit.onecx.permission.model.ProblemDetailResponse;
+import gen.org.tkit.onecx.ai.mgmt.client.model.*;
 
-/**
- * @author tchanad
- * @project onecx-ai-management-bff
- */
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
@@ -48,18 +39,15 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
 
     @Override
     public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO, String id) {
-        try {
-            // Map dto to request
-            CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
-                    .mapCreate(createAIKnowledgeDocumentDTO);
-            // then send the creation request
-            try (Response createResponse = aiKnowledgeDocumentApi.createKnowledgeDocument(id,
-                    createAIKnowledgeDocumentRequest)) {
-                return Response.status(createResponse.getStatus()).entity(createAIKnowledgeDocumentDTO).build();
-            }
-        } catch (WebApplicationException ex) {
-            return Response.status(ex.getResponse().getStatus())
-                    .entity(documentMapper.mapErrorDetails(ex.getResponse().readEntity(ProblemDetailResponse.class))).build();
+        // Map dto to request
+        CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
+                .mapCreate(createAIKnowledgeDocumentDTO);
+        // then send the creation request
+        try (Response createResponse = aiKnowledgeDocumentApi.createKnowledgeDocument(id,
+                createAIKnowledgeDocumentRequest)) {
+            var createDocument = createResponse.readEntity(AIKnowledgeDocument.class);
+
+            return Response.status(createResponse.getStatus()).entity(documentMapper.map(createDocument)).build();
         }
     }
 
@@ -74,35 +62,45 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     public Response getAIKnowledgeDocumentById(String id) {
         try (Response response = aiKnowledgeDocumentApi.getAIKnowledgeDocument(id)) {
             AIKnowledgeDocument aiKnowledgeDocument = response.readEntity(AIKnowledgeDocument.class);
-            AIKnowledgeDocumentDTO aiKnowledgeDocumentDTO = documentMapper.mapById(aiKnowledgeDocument);
+            AIKnowledgeDocumentDTO aiKnowledgeDocumentDTO = documentMapper.map(aiKnowledgeDocument);
             return Response.status(response.getStatus()).entity(aiKnowledgeDocumentDTO).build();
         }
     }
 
     @Override
-    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchRequestDTO aiKnowledgeDocumentSearchRequestDTO) {
-        return null;
+    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchCriteriaDTO aiKnowledgeDocumentSearchCriteriaDTO) {
+
+        AIKnowledgeDocumentSearchCriteria searchCriteria = documentMapper.mapSearch(aiKnowledgeDocumentSearchCriteriaDTO);
+        try (Response searchResponse = aiKnowledgeDocumentApi.searchAIKnowledgeDocuments(searchCriteria)) {
+            AIKnowledgeDocumentPageResult documentPageResult = searchResponse
+                    .readEntity(AIKnowledgeDocumentPageResult.class);
+            AIKnowledgeDocumentSearchPageResultDTO pageResultDTO = documentMapper.mapSearchPageResult(documentPageResult);
+            return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
+        }
+
     }
 
     @Override
     public Response updateAIKnowledgeDocument(String id, UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO) {
-        try {
-            //  Map dto to request
-            UpdateAIKnowledgeDocumentRequest updateAIKnowledgeDocumentRequest = documentMapper
-                    .mapUpdate(updateAIKnowledgeDocumentDTO);
-            // and update AIKnowledge Document
-            try (Response updateResponse = aiKnowledgeDocumentApi.updateKnowledgeDocument(id,
-                    updateAIKnowledgeDocumentRequest)) {
-                return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeDocumentDTO).build();
-            }
-        } catch (WebApplicationException ex) {
-            return Response.status(ex.getResponse().getStatus())
-                    .entity(documentMapper.mapErrorDetails(ex.getResponse().readEntity(ProblemDetailResponse.class))).build();
+
+        //  Map dto to request
+        UpdateAIKnowledgeDocumentRequest updateAIKnowledgeDocumentRequest = documentMapper
+                .mapUpdate(updateAIKnowledgeDocumentDTO);
+        // and update AIKnowledge Document
+        try (Response updateResponse = aiKnowledgeDocumentApi.updateKnowledgeDocument(id,
+                updateAIKnowledgeDocumentRequest)) {
+            return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeDocumentDTO).build();
         }
+
     }
 
     @ServerExceptionMapper
     public Response restException(ClientWebApplicationException ex) {
         return exceptionMapper.clientException(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> constraintException(ConstraintViolationException ex) {
+        return exceptionMapper.constraint(ex);
     }
 }
