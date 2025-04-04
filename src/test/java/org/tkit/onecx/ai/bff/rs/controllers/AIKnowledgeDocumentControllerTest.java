@@ -349,7 +349,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .as(AIKnowledgeDocumentSearchPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(5, results.getTotalNumberOfResults());
+        Assertions.assertEquals(5, results.getTotalElements());
     }
 
     @Test
@@ -401,7 +401,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .as(AIKnowledgeDocumentSearchPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(3, results.getTotalNumberOfResults());
+        Assertions.assertEquals(3, results.getTotalElements());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(0).getDocumentRefId());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(1).getDocumentRefId());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(2).getDocumentRefId());
@@ -454,7 +454,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .as(AIKnowledgeDocumentSearchPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(3, results.getTotalNumberOfResults());
+        Assertions.assertEquals(3, results.getTotalElements());
         Assertions.assertEquals("NEW", results.getResults().get(0).getStatus().name());
         Assertions.assertEquals("NEW", results.getResults().get(1).getStatus().name());
         Assertions.assertEquals("NEW", results.getResults().get(2).getStatus().name());
@@ -506,7 +506,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .as(AIKnowledgeDocumentSearchPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.getTotalNumberOfResults());
+        Assertions.assertEquals(1, results.getTotalElements());
         Assertions.assertEquals("Test AIKnowledge Document 1", results.getResults().get(0).getName());
     }
 

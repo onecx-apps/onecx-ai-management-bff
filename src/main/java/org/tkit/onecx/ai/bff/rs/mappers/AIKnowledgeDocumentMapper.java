@@ -21,7 +21,6 @@ public interface AIKnowledgeDocumentMapper {
 
     AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO);
 
-    @Mapping(target = "totalNumberOfResults", source = "totalElements")
     @Mapping(target = "results", source = "stream")
     @Mapping(target = "removeResultsItem", ignore = true)
     AIKnowledgeDocumentSearchPageResultDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);

@@ -10,8 +10,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.ClientWebApplicationException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tkit.onecx.ai.bff.rs.mappers.AIKnowledgeDocumentMapper;
 import org.tkit.onecx.ai.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
@@ -25,8 +23,6 @@ import gen.org.tkit.onecx.ai.mgmt.client.model.*;
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
 public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServiceApiService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AIKnowledgeDocumentController.class);
-
     @Inject
     @RestClient
     AiKnowledgeDocumentInternalApi aiKnowledgeDocumentApi;
