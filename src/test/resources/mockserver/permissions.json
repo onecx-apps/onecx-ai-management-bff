@@ -7,13 +7,13 @@
           "alice"
         ]
       },
-      "path": "/v1/permissions/user/applications/onecx-ai-bff"
+      "path": "/v1/permissions/user/applications/onecx-ai-management-bff"
     },
     "httpResponse": {
       "body": {
         "type": "JSON",
         "json": {
-          "appId": "onecx-ai-bff",
+          "appId": "onecx-ai-management-bff",
           "permissions": {
             "ai-knowledge-document": [
               "read",
@@ -38,13 +38,13 @@
           "bob"
         ]
       },
-      "path": "/v1/permissions/user/applications/onecx-ai-bff"
+      "path": "/v1/permissions/user/applications/onecx-ai-management-bff"
     },
     "httpResponse": {
       "body": {
         "type": "JSON",
         "json": {
-          "appId": "onecx-ai-bff",
+          "appId": "onecx-ai-management-bff",
           "permissions": {
             "AIKnowledgeDocument": [
               "read"

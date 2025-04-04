@@ -1,1 +1,1 @@
-* xref:onecx-ai-bff:index.adoc[Backend For Frontend]
+* xref:onecx-ai-management-bff:index.adoc[Backend For Frontend]

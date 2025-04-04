@@ -20,8 +20,8 @@ import org.mockserver.model.MediaType;
 import org.tkit.onecx.ai.bff.rs.AbstractTest;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.*;
-import gen.org.tkit.onecx.ai.mgmt.client.model.*;
+import gen.org.tkit.onecx.ai.management.bff.client.model.*;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;

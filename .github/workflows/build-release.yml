@@ -9,4 +9,4 @@ jobs:
     secrets: inherit
     with:
       native: true
-      helmEventTargetRepository: onecx/onecx-ai-bff
+      helmEventTargetRepository: onecx-apps/onecx-ai-management-bff

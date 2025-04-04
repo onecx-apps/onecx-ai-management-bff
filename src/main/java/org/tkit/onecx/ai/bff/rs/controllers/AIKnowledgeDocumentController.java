@@ -14,10 +14,10 @@ import org.tkit.onecx.ai.bff.rs.mappers.AIKnowledgeDocumentMapper;
 import org.tkit.onecx.ai.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tkit.onecx.ai.bff.rs.internal.AiKnowledgeDocumentBffServiceApiService;
-import gen.org.tkit.onecx.ai.bff.rs.internal.model.*;
-import gen.org.tkit.onecx.ai.mgmt.client.api.AiKnowledgeDocumentInternalApi;
-import gen.org.tkit.onecx.ai.mgmt.client.model.*;
+import gen.org.tkit.onecx.ai.management.bff.client.api.AiKnowledgeDocumentInternalApi;
+import gen.org.tkit.onecx.ai.management.bff.client.model.*;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeDocumentBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)

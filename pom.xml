@@ -10,7 +10,7 @@
         <version>0.72.4</version>
     </parent>
 
-    <artifactId>onecx-ai-bff</artifactId>
+    <artifactId>onecx-ai-management-bff</artifactId>
     <version>999-SNAPSHOT</version>
     <dependencies>
         <dependency>
@@ -138,8 +138,8 @@
                         </goals>
                         <configuration>
                             <inputSpec>src/main/openapi/openapi-bff.yaml</inputSpec>
-                            <apiPackage>gen.org.tkit.onecx.ai.bff.rs.internal</apiPackage>
-                            <modelPackage>gen.org.tkit.onecx.ai.bff.rs.internal.model</modelPackage>
+                            <apiPackage>gen.org.tkit.onecx.ai.management.bff.rs.internal</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.ai.management.bff.rs.internal.model</modelPackage>
                             <typeMappings>File=byte[]</typeMappings>
                         </configuration>
                     </execution>
