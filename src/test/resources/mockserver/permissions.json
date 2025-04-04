@@ -15,7 +15,7 @@
         "json": {
           "appId": "onecx-ai-bff",
           "permissions": {
-            "AIKnowledgeDocument": [
+            "ai-knowledge-document": [
               "read",
               "write",
               "delete"

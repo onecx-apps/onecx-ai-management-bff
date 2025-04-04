@@ -8,6 +8,10 @@ tags:
 paths:
   /aIKnowledgeDocument/search:
     post:
+      x-onecx:
+        permissions:
+          ai-knowledge-document:
+            - read
       operationId: searchAIKnowledgeDocuments
       tags:
         - AIKnowledgeDocumentBffService
@@ -29,13 +33,12 @@ paths:
                 $ref: "#/components/schemas/AIKnowledgeDocumentSearchPageResult"
         "400":
           description: Bad request
-        "500":
-          description: Something went wrong
+
   /aIKnowledgeDocument/{id}:
     get:
       x-onecx:
         permissions:
-          AIKnowledgeDocument:
+          ai-knowledge-document:
             - read
       operationId: getAIKnowledgeDocumentById
       tags:
@@ -61,13 +64,12 @@ paths:
                 $ref: "#/components/schemas/ProblemDetailResponse"
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetailResponse"
+
     put:
+      x-onecx:
+        permissions:
+          ai-knowledge-document:
+            - write
       operationId: updateAIKnowledgeDocument
       tags:
         - AIKnowledgeDocumentBffService
@@ -106,6 +108,9 @@ paths:
         "404":
           description: AIKnowledgeDocument not found
     delete:
+      x-onecx:
+        ai-knowledge-document:
+          - delete
       tags:
         - AIKnowledgeDocumentBffService
       operationId: deleteAIKnowledgeDocument
@@ -119,9 +124,13 @@ paths:
       responses:
         "204":
           description: AIKnowledgeDocument deleted
+
   /aIKnowledgeDocument:
     post:
       operationId: createAIKnowledgeDocument
+      x-onecx:
+        ai-knowledge-document:
+          - write
       tags:
         - AIKnowledgeDocumentBffService
       description: This operation performs a create.
@@ -185,11 +194,6 @@ components:
     AIKnowledgeDocumentSearchCriteria:
       type: object
       properties:
-#        limit:
-#          type: integer
-#          maximum: 2500
-#        id:
-#          type: string
         name:
           type: string
         documentRefId:

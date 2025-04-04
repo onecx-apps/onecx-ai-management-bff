@@ -1,7 +1,7 @@
 package org.tkit.onecx.ai.bff.rs.controllers;
 
-import io.quarkus.test.junit.main.QuarkusMainIntegrationTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 
-@QuarkusMainIntegrationTest
+@QuarkusIntegrationTest
 public class AIKnowledgeDocumentControllerIT extends AIKnowledgeDocumentControllerTest {
 }
