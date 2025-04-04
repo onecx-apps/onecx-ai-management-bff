@@ -6,8 +6,9 @@ description: onecx-ai-bff BFF
 keywords:
   - ai management bff
   - onecx-ai-bff
+  - onecx-ai-management-bff
 sources:
-  - https://github.com/onecx/onecx-ai-bff
+  - https://github.com/onecx-apps/onecx-ai-management-bff
 maintainers:
   - name: Tkit Developer
     email: tkit_dev@1000kit.org

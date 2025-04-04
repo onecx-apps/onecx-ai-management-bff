@@ -12,11 +12,6 @@ import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
 
-/**
- * @author tchanad
- * @project onecx-ai-management-bff
- */
-
 @QuarkusTestResource(MockServerTestResource.class)
 public abstract class AbstractTest {
     protected static final String ADMIN = "alice";

@@ -30,7 +30,7 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 @QuarkusTest
 @LogService
 @TestHTTPEndpoint(AIKnowledgeDocumentController.class)
-public class AIKnowledgeDocumentControllerTest extends AbstractTest {
+class AIKnowledgeDocumentControllerTest extends AbstractTest {
 
     private static final String AI_KNOWLEDGE_DOCUMENT_SVC_INTERNAL_API_BASE_PATH = "/internal/ai/ai-knowledge-documents";
     private static final String AI_CONTEXT_SVC_BASE_PATH = "/internal/ai/ai-contexts";
