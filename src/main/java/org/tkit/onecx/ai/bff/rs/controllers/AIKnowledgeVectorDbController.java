@@ -1,10 +1,5 @@
 package org.tkit.onecx.ai.bff.rs.controllers;
 
-import gen.org.tkit.onecx.ai.management.bff.client.model.AIContext;
-import gen.org.tkit.onecx.ai.management.bff.client.model.AIKnowledgeVectorDb;
-import gen.org.tkit.onecx.ai.management.bff.client.model.UpdateAIContextRequest;
-import gen.org.tkit.onecx.ai.management.bff.client.model.UpdateAIKnowledgeVectorDbRequest;
-import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,6 +16,7 @@ import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.management.bff.client.api.AiKnowledgeVectorDbInternalApi;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeVectorDbBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
@@ -51,11 +47,12 @@ public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbBffServ
 
     @Override
     public Response getAIKnowledgeVectorDbById(String id) {
-        try (Response response = aiKnowledgeVectorDbInternalApi.getAIKnowledgeVectorDb(id)) {
-            AIKnowledgeVectorDb aiKnowledgeVectorDb = response.readEntity(AIKnowledgeVectorDb.class);
-            AIKnowledgeVectorDbDTO aiKnowledgeVectorDbDTO = aiKnowledgeVectorDbMapper.map(aiKnowledgeVectorDb);
-            return Response.status(response.getStatus()).entity(aiKnowledgeVectorDbDTO).build();
-        }
+        //        try (Response response = aiKnowledgeVectorDbInternalApi.getAIKnowledgeVectorDb(id)) {
+        //            AIKnowledgeVectorDb aiKnowledgeVectorDb = response.readEntity(AIKnowledgeVectorDb.class);
+        //            AIKnowledgeVectorDbDTO aiKnowledgeVectorDbDTO = aiKnowledgeVectorDbMapper.map(aiKnowledgeVectorDb);
+        //            return Response.status(response.getStatus()).entity(aiKnowledgeVectorDbDTO).build();
+        //        }
+        return null;
     }
 
     @Override
@@ -66,12 +63,13 @@ public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbBffServ
     @Override
     public Response updateAIKnowledgeVectorDb(String id,
             UpdateAIKnowledgeVectorDbRequestDTO updateAIKnowledgeVectorDbRequestDTO) {
-        UpdateAIKnowledgeVectorDbRequest updateAIKnowledgeVectorDbRequest = aiKnowledgeVectorDbMapper
-            .mapUpdate(updateAIKnowledgeVectorDbRequestDTO);
-        try (Response updateResponse = aiKnowledgeVectorDbInternalApi.updateKnowledgeVectorDb(id,
-            updateAIKnowledgeVectorDbRequest)) {
-            return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeVectorDbRequestDTO).build();
-        }
+        //        UpdateAIKnowledgeVectorDbRequest updateAIKnowledgeVectorDbRequest = aiKnowledgeVectorDbMapper
+        //            .mapUpdate(updateAIKnowledgeVectorDbRequestDTO);
+        //        try (Response updateResponse = aiKnowledgeVectorDbInternalApi.updateKnowledgeVectorDb(id,
+        //            updateAIKnowledgeVectorDbRequest)) {
+        //            return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeVectorDbRequestDTO).build();
+        //        }
+        return null;
     }
 
     @ServerExceptionMapper

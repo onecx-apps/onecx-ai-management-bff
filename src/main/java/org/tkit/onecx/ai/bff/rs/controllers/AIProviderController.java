@@ -1,8 +1,5 @@
 package org.tkit.onecx.ai.bff.rs.controllers;
 
-import gen.org.tkit.onecx.ai.management.bff.client.api.AiProviderInternalApi;
-import gen.org.tkit.onecx.ai.management.bff.client.model.*;
-import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -13,7 +10,10 @@ import org.tkit.onecx.ai.bff.rs.mappers.AIProviderMapper;
 import org.tkit.onecx.ai.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
+import gen.org.tkit.onecx.ai.management.bff.client.api.AiProviderInternalApi;
+import gen.org.tkit.onecx.ai.management.bff.client.model.*;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiProviderBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
@@ -57,15 +57,22 @@ public class AIProviderController implements AiProviderBffServiceApiService {
 
     @Override
     public Response searchAIProvider(AIProviderSearchRequestDTO aiProviderSearchRequestDTO) {
-        return null;
+        AIProviderSearchCriteria searchCriteria = aiProviderMapper.mapSearch(aiProviderSearchRequestDTO);
+        try (Response searchResponse = aiProviderInternalApi.findAIProviderBySearchCriteria(searchCriteria)) {
+            AIProviderPageResult aiProviderPageResult = searchResponse
+                    .readEntity(AIProviderPageResult.class);
+            AIProviderSearchResponseDTO pageResultDTO = aiProviderMapper
+                    .mapSearchPageResult(aiProviderPageResult);
+            return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
+        }
     }
 
     @Override
     public Response updateAIProvider(String id, UpdateAIProviderDTO updateAIProviderDTO) {
         UpdateAIProviderRequest updateAIContextRequest = aiProviderMapper
-            .mapUpdate(updateAIProviderDTO);
+                .mapUpdate(updateAIProviderDTO);
         try (Response updateResponse = aiProviderInternalApi.updateAIProvider(id,
-            updateAIContextRequest)) {
+                updateAIContextRequest)) {
             return Response.status(updateResponse.getStatus()).entity(updateAIProviderDTO).build();
         }
     }
