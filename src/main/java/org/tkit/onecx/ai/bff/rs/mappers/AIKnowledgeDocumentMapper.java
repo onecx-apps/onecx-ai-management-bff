@@ -19,9 +19,9 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
     CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
 
-    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO);
+    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);
 
     @Mapping(target = "results", source = "stream")
     @Mapping(target = "removeResultsItem", ignore = true)
-    AIKnowledgeDocumentSearchPageResultDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
+    AIKnowledgeDocumentSearchResponseDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
 }

@@ -34,7 +34,7 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO, String id) {
+    public Response createAIKnowledgeDocument(String id, CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO) {
         // Map dto to request
         CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
                 .mapCreate(createAIKnowledgeDocumentDTO);
@@ -64,13 +64,13 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     }
 
     @Override
-    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchCriteriaDTO aiKnowledgeDocumentSearchCriteriaDTO) {
+    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchRequestDTO aiKnowledgeDocumentSearchRequestDTO) {
 
-        AIKnowledgeDocumentSearchCriteria searchCriteria = documentMapper.mapSearch(aiKnowledgeDocumentSearchCriteriaDTO);
+        AIKnowledgeDocumentSearchCriteria searchCriteria = documentMapper.mapSearch(aiKnowledgeDocumentSearchRequestDTO);
         try (Response searchResponse = aiKnowledgeDocumentApi.searchAIKnowledgeDocuments(searchCriteria)) {
             AIKnowledgeDocumentPageResult documentPageResult = searchResponse
                     .readEntity(AIKnowledgeDocumentPageResult.class);
-            AIKnowledgeDocumentSearchPageResultDTO pageResultDTO = documentMapper.mapSearchPageResult(documentPageResult);
+            AIKnowledgeDocumentSearchResponseDTO pageResultDTO = documentMapper.mapSearchPageResult(documentPageResult);
             return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
         }
 
