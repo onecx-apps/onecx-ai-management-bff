@@ -17,17 +17,24 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "modificationDate", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     AIKnowledgeDocument map(AIKnowledgeDocumentDTO aiKnowledgeDocumentDTO);
-    //
-    //    UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
-    //
-    //    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
-    //    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
-    //    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
-    //    CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
-    //
-    //    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);
-    //
-    //    @Mapping(target = "results", source = "stream")
-    //    @Mapping(target = "removeResultsItem", ignore = true)
-    //    AIKnowledgeDocumentSearchResponseDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
+
+    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
+    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
+    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
+    @Mapping(target = "modificationCount", ignore = true)
+    UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
+
+    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
+    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
+    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
+    CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
+
+    @Mapping(target = "pageNumber", ignore = true)
+    @Mapping(target = "pageSize", ignore = true)
+    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);
+
+    @Mapping(target = "results", source = "stream")
+    @Mapping(target = "totalNumberOfResults", source = "totalElements")
+    @Mapping(target = "removeResultsItem", ignore = true)
+    AIKnowledgeDocumentSearchResponseDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
 }

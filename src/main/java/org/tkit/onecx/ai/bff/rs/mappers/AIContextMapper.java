@@ -38,11 +38,27 @@ public interface AIContextMapper {
     @Mapping(target = "llmSystemMessage", ignore = true)
     AIContext map(AIContextDTO aiContextDTO);
 
+    @Mapping(target = "name", source = "dataObject.name")
+    @Mapping(target = "llmSystemMessage", ignore = true)
+    @Mapping(target = "llmProvider", source = "dataObject.provider")
+    @Mapping(target = "vectorDb", source = "dataObject.aIKnowledgeVectorDb")
+    @Mapping(target = "urls", source = "dataObject.aIKnowledgeUrl")
+    @Mapping(target = "dbs", source = "dataObject.aIKnowledgeDbs")
+    @Mapping(target = "documents", source = "dataObject.aIKnowledgeDocuments")
     CreateAIContextRequest mapCreate(CreateAIContextRequestDTO createAIContextRequestDTO);
-    //
-    //    UpdateAIContextRequest mapUpdate(UpdateAIContextRequestDTO updateAIContextRequestDTO);
-    //
-    //    AIContextSearchCriteria mapSearch(SearchAIContextRequestDTO searchAIContextRequestDTO);
-    //
-    //    SearchAIContextResponseDTO mapSearchPageResult(AIContextPageResult aiContextPageResult);
+
+    @Mapping(target = "name", source = "dataObject.name")
+    @Mapping(target = "llmSystemMessage", ignore = true)
+    @Mapping(target = "llmProvider", source = "dataObject.provider")
+    @Mapping(target = "vectorDb", source = "dataObject.aIKnowledgeVectorDb")
+    @Mapping(target = "urls", source = "dataObject.aIKnowledgeUrl")
+    @Mapping(target = "dbs", source = "dataObject.aIKnowledgeDbs")
+    @Mapping(target = "documents", source = "dataObject.aIKnowledgeDocuments")
+    UpdateAIContextRequest mapUpdate(UpdateAIContextRequestDTO updateAIContextRequestDTO);
+
+    @Mapping(target = "tenandId", ignore = true)
+    AIContextSearchCriteria mapSearch(SearchAIContextRequestDTO searchAIContextRequestDTO);
+
+    @Mapping(target = "removeStreamItem", ignore = true)
+    SearchAIContextResponseDTO mapSearchPageResult(AIContextPageResult aiContextPageResult);
 }

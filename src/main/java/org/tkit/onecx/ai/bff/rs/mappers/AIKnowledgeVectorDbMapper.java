@@ -24,8 +24,14 @@ public interface AIKnowledgeVectorDbMapper {
     @Mapping(target = "vdbUrl", source = "vdb")
     @Mapping(target = "pwd", ignore = true)
     AIKnowledgeVectorDb map(AIKnowledgeVectorDbDTO aiKnowledgeVectorDbDTO);
-    //
-    //    CreateAIKnowledgeVectorDbRequest mapCreate(CreateAIKnowledgeVectorDbRequestDTO createAIknowledgeVectorDbRequestDTO);
-    //
-    //    UpdateAIKnowledgeVectorDbRequest mapUpdate(UpdateAIKnowledgeVectorDbRequestDTO updateAIknowledgeVectorDbRequestDTO);
+
+    @Mapping(target = "pwd", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "vdbUrl", source = "vdb")
+    CreateAIKnowledgeVectorDbRequest mapCreate(CreateAIKnowledgeVectorDbRequestDTO createAIknowledgeVectorDbRequestDTO);
+
+    @Mapping(target = "pwd", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "vdbUrl", source = "vdb")
+    UpdateAIKnowledgeVectorDbRequest mapUpdate(UpdateAIKnowledgeVectorDbRequestDTO updateAIknowledgeVectorDbRequestDTO);
 }

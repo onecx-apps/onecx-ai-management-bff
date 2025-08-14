@@ -36,12 +36,12 @@ public class AIContextController implements AiContextBffServiceApiService {
     @Override
     public Response createAIContext(CreateAIContextRequestDTO createAIContextRequestDTO) {
         CreateAIContextRequest createAIContextRequest = aiContextMapper.mapCreate(createAIContextRequestDTO);
-        try (Response createResponse = aiContextInternalApi.createAIContext(createAIContextRequest)) {
+        // 	needs endpoint to create aiContext directly and not under ai-knowledgebases
+        try (Response createResponse = aiContextInternalApi.createAIContext("", createAIContextRequest)) {
             var createAiContext = createResponse.readEntity(AIContext.class);
 
             return Response.status(createResponse.getStatus()).entity(aiContextMapper.map(createAiContext)).build();
         }
-        return null;
     }
 
     @Override
@@ -62,25 +62,23 @@ public class AIContextController implements AiContextBffServiceApiService {
 
     @Override
     public Response searchAIContexts(SearchAIContextRequestDTO searchAIContextRequestDTO) {
-        //        AIContextSearchCriteria searchCriteria = aiContextMapper.mapSearch(searchAIContextRequestDTO);
-        //        try (Response searchResponse = aiContextInternalApi.findAIContextBySearchCriteria(searchCriteria)) {
-        //            AIContextPageResult aiContextPageResult = searchResponse
-        //                    .readEntity(AIContextPageResult.class);
-        //            SearchAIContextResponseDTO pageResultDTO = aiContextMapper.mapSearchPageResult(aiContextPageResult);
-        //            return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
-        //        }
-        return null;
+        AIContextSearchCriteria searchCriteria = aiContextMapper.mapSearch(searchAIContextRequestDTO);
+        try (Response searchResponse = aiContextInternalApi.findAIContextBySearchCriteria(searchCriteria)) {
+            AIContextPageResult aiContextPageResult = searchResponse
+                    .readEntity(AIContextPageResult.class);
+            SearchAIContextResponseDTO pageResultDTO = aiContextMapper.mapSearchPageResult(aiContextPageResult);
+            return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
+        }
     }
 
     @Override
     public Response updateAIContext(String id, UpdateAIContextRequestDTO updateAIContextRequestDTO) {
-        //        UpdateAIContextRequest updateAIContextRequest = aiContextMapper
-        //                .mapUpdate(updateAIContextRequestDTO);
-        //        try (Response updateResponse = aiContextInternalApi.updateAIContext(id,
-        //                updateAIContextRequest)) {
-        //            return Response.status(updateResponse.getStatus()).entity(updateAIContextRequestDTO).build();
-        //        }
-        return null;
+        UpdateAIContextRequest updateAIContextRequest = aiContextMapper
+                .mapUpdate(updateAIContextRequestDTO);
+        try (Response updateResponse = aiContextInternalApi.updateAIContext(id,
+                updateAIContextRequest)) {
+            return Response.status(updateResponse.getStatus()).entity(updateAIContextRequestDTO).build();
+        }
     }
 
     @ServerExceptionMapper
