@@ -117,18 +117,12 @@ paths:
       responses:
         "204":
           description: AIKnowledgeVectorDb deleted
-  /AiContext/{id}/AIKnowledgeVectorDb:
+  /AIKnowledgeVectorDb:
     post:
       operationId: createAIKnowledgeVectorDb
       tags:
         - AIKnowledgeVectorDbBffService
       description: This operation performs a create.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -264,18 +258,12 @@ paths:
       responses:
         "204":
           description: AIKnowledgeDocument deleted
-  /aiContext/{id}/aIKnowledgeDocument:
+  /aIKnowledgeDocument:
     post:
       operationId: createAIKnowledgeDocument
       tags:
         - AIKnowledgeDocumentBffService
       description: This operation performs a create.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -822,7 +810,9 @@ components:
           type: string
         description:
           type: string
-        appId:
+        vdb:
+          type: string
+        vdbCollection:
           type: string
     UpdateAIKnowledgeVectorDbRequest:
       type: object
@@ -831,7 +821,9 @@ components:
           type: string
         description:
           type: string
-        appId:
+        vdb:
+          type: string
+        vdbCollection:
           type: string
         aiContext:
           type: object
