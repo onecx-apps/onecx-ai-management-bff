@@ -36,6 +36,7 @@ public class AIContextController implements AiContextBffServiceApiService {
     @Override
     public Response createAIContext(CreateAIContextRequestDTO createAIContextRequestDTO) {
         CreateAIContextRequest createAIContextRequest = aiContextMapper.mapCreate(createAIContextRequestDTO);
+        // this functionality doesn't work:
         // 	needs endpoint to create aiContext directly and not under ai-knowledgebases
         try (Response createResponse = aiContextInternalApi.createAIContext("", createAIContextRequest)) {
             var createAiContext = createResponse.readEntity(AIContext.class);
