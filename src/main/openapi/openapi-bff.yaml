@@ -3,28 +3,28 @@ info:
   title: onecx-ai-management-bff
   version: "1.0"
 paths:
-  /AIKnowledgeVectorDb/search:
-    post:
-      operationId: searchAIKnowledgeVectorDbs
-      tags:
-        - AIKnowledgeVectorDbBffService
-      description: This operation performs a search based on provided search criteria. Search for AIKnowledgeVectorDb results.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SearchAIKnowledgeVectorDbRequest"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchAIKnowledgeVectorDbResponse"
-        "400":
-          description: Bad request
-        "500":
-          description: Something went wrong
+  # /AIKnowledgeVectorDb/search:
+  #   post:
+  #     operationId: searchAIKnowledgeVectorDbs
+  #     tags:
+  #       - AIKnowledgeVectorDbBffService
+  #     description: This operation performs a search based on provided search criteria. Search for AIKnowledgeVectorDb results.
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/SearchAIKnowledgeVectorDbRequest"
+  #     responses:
+  #       "200":
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/SearchAIKnowledgeVectorDbResponse"
+  #       "400":
+  #         description: Bad request
+  #       "500":
+  #         description: Something went wrong
   /AIKnowledgeVectorDb/{id}:
     get:
       x-onecx:
@@ -104,6 +104,10 @@ paths:
         "404":
           description: AIKnowledgeVectorDb not found
     delete:
+      x-onecx:
+        permissions:
+          AIKnowledgeVectorDb:
+            - delete
       tags:
         - AIKnowledgeVectorDbBffService
       operationId: deleteAIKnowledgeVectorDb
@@ -117,37 +121,37 @@ paths:
       responses:
         "204":
           description: AIKnowledgeVectorDb deleted
-  /AIKnowledgeVectorDb:
-    post:
-      operationId: createAIKnowledgeVectorDb
-      tags:
-        - AIKnowledgeVectorDbBffService
-      description: This operation performs a create.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateAIKnowledgeVectorDbRequest"
-      responses:
-        "201":
-          description: New AIKnowledgeVectorDb created
-          headers:
-            Location:
-              required: true
-              schema:
-                type: string
-                format: url
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreateAIKnowledgeVectorDbResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetailResponse"
+  # /AIKnowledgeVectorDb:
+  #   post:
+  #     operationId: createAIKnowledgeVectorDb
+  #     tags:
+  #       - AIKnowledgeVectorDbBffService
+  #     description: This operation performs a create.
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/CreateAIKnowledgeVectorDbRequest"
+  #     responses:
+  #       "201":
+  #         description: New AIKnowledgeVectorDb created
+  #         headers:
+  #           Location:
+  #             required: true
+  #             schema:
+  #               type: string
+  #               format: url
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/CreateAIKnowledgeVectorDbResponse"
+  #       "400":
+  #         description: Bad request
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ProblemDetailResponse"
   /aIKnowledgeDocument/search:
     post:
       operationId: searchAIKnowledgeDocuments
@@ -207,6 +211,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetailResponse"
     put:
+      x-onecx:
+        permissions:
+          AIKnowledgeDocument:
+            - write
       operationId: updateAIKnowledgeDocument
       tags:
         - AIKnowledgeDocumentBffService
@@ -245,6 +253,10 @@ paths:
         "404":
           description: AIKnowledgeDocument not found
     delete:
+      x-onecx:
+        permissions:
+          AIKnowledgeDocument:
+            - delete
       tags:
         - AIKnowledgeDocumentBffService
       operationId: deleteAIKnowledgeDocument
@@ -258,37 +270,37 @@ paths:
       responses:
         "204":
           description: AIKnowledgeDocument deleted
-  /aIKnowledgeDocument:
-    post:
-      operationId: createAIKnowledgeDocument
-      tags:
-        - AIKnowledgeDocumentBffService
-      description: This operation performs a create.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateAIKnowledgeDocument"
-      responses:
-        "201":
-          description: New AIKnowledgeDocument created
-          headers:
-            Location:
-              required: true
-              schema:
-                type: string
-                format: url
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AIKnowledgeDocumentCreateResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetailResponse"
+  # /aIKnowledgeDocument:
+  #   post:
+  #     operationId: createAIKnowledgeDocument
+  #     tags:
+  #       - AIKnowledgeDocumentBffService
+  #     description: This operation performs a create.
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/CreateAIKnowledgeDocument"
+  #     responses:
+  #       "201":
+  #         description: New AIKnowledgeDocument created
+  #         headers:
+  #           Location:
+  #             required: true
+  #             schema:
+  #               type: string
+  #               format: url
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/AIKnowledgeDocumentCreateResponse"
+  #       "400":
+  #         description: Bad request
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ProblemDetailResponse"
   /aIProvider:
     post:
       operationId: createAIProvider
@@ -379,6 +391,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetailResponse"
     put:
+      x-onecx:
+        permissions:
+          AIProvider:
+            - write
       operationId: updateAIProvider
       tags:
         - AIProviderBffService
@@ -417,6 +433,10 @@ paths:
         "404":
           description: AIProvider not found
     delete:
+      x-onecx:
+        permissions:
+          AIProvider:
+            - delete
       tags:
         - AIProviderBffService
       operationId: deleteAIProvider
@@ -609,6 +629,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetailResponse"
     put:
+      x-onecx:
+        permissions:
+          aiContext:
+            - write
       operationId: updateAIContext
       tags:
         - AIContextBffService
@@ -647,6 +671,10 @@ paths:
         "404":
           description: AIContext not found
     delete:
+      x-onecx:
+        permissions:
+          aiContext:
+            - delete
       tags:
         - AIContextBffService
       operationId: deleteAIContext
@@ -682,37 +710,37 @@ paths:
           description: Bad request
         "500":
           description: Something went wrong
-  /aiContext:
-    post:
-      operationId: createAIContext
-      tags:
-        - AIContextBffService
-      description: This operation performs a create.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateAIContextRequest"
-      responses:
-        "201":
-          description: New AIContext created
-          headers:
-            Location:
-              required: true
-              schema:
-                type: string
-                format: url
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CreateAIContextResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetailResponse"
+  # /aiContext:
+  #   post:
+  #     operationId: createAIContext
+  #     tags:
+  #       - AIContextBffService
+  #     description: This operation performs a create.
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/CreateAIContextRequest"
+  #     responses:
+  #       "201":
+  #         description: New AIContext created
+  #         headers:
+  #           Location:
+  #             required: true
+  #             schema:
+  #               type: string
+  #               format: url
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/CreateAIContextResponse"
+  #       "400":
+  #         description: Bad request
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ProblemDetailResponse"
 components:
   schemas:
     AIKnowledgeVectorDb:

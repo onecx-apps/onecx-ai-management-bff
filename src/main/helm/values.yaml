@@ -10,7 +10,19 @@ app:
       enabled: true
       spec:
         permissions:
-          ai-knowledge-document:
+          AIKnowledgeDocument:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          AIKnowledgeVectorDb:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          AIProvider:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          aiContext:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
