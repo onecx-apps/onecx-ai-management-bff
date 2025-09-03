@@ -34,20 +34,6 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO) {
-        CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
-                .mapCreate(createAIKnowledgeDocumentDTO);
-        // this functionality doesn't work:
-        // needs endpoint to create aiContext directly and not under ai-context
-        try (Response createResponse = aiKnowledgeDocumentApi.createKnowledgeDocument("",
-                createAIKnowledgeDocumentRequest)) {
-            var createDocument = createResponse.readEntity(AIKnowledgeDocument.class);
-
-            return Response.status(createResponse.getStatus()).entity(documentMapper.map(createDocument)).build();
-        }
-    }
-
-    @Override
     public Response deleteAIKnowledgeDocument(String id) {
         try (Response response = aiKnowledgeDocumentApi.deleteKnowledgeDocument(id)) {
             return Response.status(response.getStatus()).build();

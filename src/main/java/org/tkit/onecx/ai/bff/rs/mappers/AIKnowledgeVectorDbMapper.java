@@ -9,7 +9,6 @@ import gen.org.tkit.onecx.ai.management.bff.client.model.*;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @Mapper(uses = { OffsetDateTime.class })
-
 public interface AIKnowledgeVectorDbMapper {
 
     @Mapping(target = "vdb", source = "vdbUrl")

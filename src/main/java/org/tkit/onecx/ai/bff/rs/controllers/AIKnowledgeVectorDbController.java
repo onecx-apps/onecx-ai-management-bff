@@ -16,7 +16,6 @@ import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.management.bff.client.api.AiKnowledgeVectorDbInternalApi;
 import gen.org.tkit.onecx.ai.management.bff.client.model.AIKnowledgeVectorDb;
-import gen.org.tkit.onecx.ai.management.bff.client.model.CreateAIKnowledgeVectorDbRequest;
 import gen.org.tkit.onecx.ai.management.bff.client.model.UpdateAIKnowledgeVectorDbRequest;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeVectorDbBffServiceApiService;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
@@ -36,21 +35,6 @@ public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbBffServ
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIKnowledgeVectorDb(CreateAIKnowledgeVectorDbRequestDTO createAIKnowledgeVectorDbRequestDTO) {
-        CreateAIKnowledgeVectorDbRequest createAIKnowledgeVectorDbRequest = aiKnowledgeVectorDbMapper
-                .mapCreate(createAIKnowledgeVectorDbRequestDTO);
-        //  this functionality doesn't work:
-        // 	needs endpoint to create AIKnowledgeVectorDb directly and not under ai-context
-        try (Response createResponse = aiKnowledgeVectorDbInternalApi.createKnowledgeVectorDb("",
-                createAIKnowledgeVectorDbRequest)) {
-            var createAiKnowledgeVectorDb = createResponse.readEntity(AIKnowledgeVectorDb.class);
-
-            return Response.status(createResponse.getStatus()).entity(aiKnowledgeVectorDbMapper.map(createAiKnowledgeVectorDb))
-                    .build();
-        }
-    }
-
-    @Override
     public Response deleteAIKnowledgeVectorDb(String id) {
         try (Response response = aiKnowledgeVectorDbInternalApi.deleteKnowledgeVectorDb(id)) {
             return Response.status(response.getStatus()).build();
@@ -64,13 +48,6 @@ public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbBffServ
             AIKnowledgeVectorDbDTO aiKnowledgeVectorDbDTO = aiKnowledgeVectorDbMapper.map(aiKnowledgeVectorDb);
             return Response.status(response.getStatus()).entity(aiKnowledgeVectorDbDTO).build();
         }
-    }
-
-    @Override
-    public Response searchAIKnowledgeVectorDbs(SearchAIKnowledgeVectorDbRequestDTO searchAIKnowledgeVectorDbRequestDTO) {
-        // this functionality doesn't work:
-        // svc doesn't have search functionality for AIKnowledgeVectorDbs
-        return null;
     }
 
     @Override

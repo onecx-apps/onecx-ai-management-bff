@@ -34,18 +34,6 @@ public class AIContextController implements AiContextBffServiceApiService {
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIContext(CreateAIContextRequestDTO createAIContextRequestDTO) {
-        CreateAIContextRequest createAIContextRequest = aiContextMapper.mapCreate(createAIContextRequestDTO);
-        // this functionality doesn't work:
-        // 	needs endpoint to create aiContext directly and not under ai-knowledgebases
-        try (Response createResponse = aiContextInternalApi.createAIContext("", createAIContextRequest)) {
-            var createAiContext = createResponse.readEntity(AIContext.class);
-
-            return Response.status(createResponse.getStatus()).entity(aiContextMapper.map(createAiContext)).build();
-        }
-    }
-
-    @Override
     public Response deleteAIContext(String id) {
         try (Response response = aiContextInternalApi.deleteAIContext(id)) {
             return Response.status(response.getStatus()).build();
