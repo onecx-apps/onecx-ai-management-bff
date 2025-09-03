@@ -29,8 +29,6 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
     CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
 
-    @Mapping(target = "pageNumber", ignore = true)
-    @Mapping(target = "pageSize", ignore = true)
     AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);
 
     @Mapping(target = "results", source = "stream")

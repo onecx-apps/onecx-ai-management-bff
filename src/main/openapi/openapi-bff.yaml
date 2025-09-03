@@ -911,6 +911,17 @@ components:
         limit:
           type: integer
           maximum: 2500
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 10
+          maximum: 100
+          type: integer
         id:
           type: string
         name:
@@ -1025,6 +1036,17 @@ components:
         limit:
           type: integer
           maximum: 2500
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 10
+          maximum: 100
+          type: integer
         id:
           type: integer
           format: int32

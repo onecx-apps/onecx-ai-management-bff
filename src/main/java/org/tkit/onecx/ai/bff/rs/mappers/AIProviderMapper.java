@@ -36,8 +36,6 @@ public interface AIProviderMapper {
     @Mapping(target = "apiKey", source = "dataObject.apiKey")
     UpdateAIProviderRequest mapUpdate(UpdateAIProviderDTO updateAIKnowledgeBaseRequestDTO);
 
-    @Mapping(target = "pageSize", ignore = true)
-    @Mapping(target = "pageNumber", ignore = true)
     @Mapping(target = "apiKey", ignore = true)
     @Mapping(target = "tenandId", ignore = true)
     AIProviderSearchCriteria mapSearch(AIProviderSearchRequestDTO searchAIKnowledgeBaseRequestDTO);
