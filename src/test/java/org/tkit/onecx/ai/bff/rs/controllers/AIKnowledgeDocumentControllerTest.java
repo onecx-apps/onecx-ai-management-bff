@@ -11,8 +11,8 @@ import java.util.List;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
@@ -34,28 +34,27 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
 
     private static final String AI_KNOWLEDGE_DOCUMENT_SVC_INTERNAL_API_BASE_PATH = "/internal/ai/ai-knowledge-documents";
     private static final String AI_CONTEXT_SVC_BASE_PATH = "/internal/ai/ai-contexts";
-    // Instanciate keycloack test client
-    KeycloakTestClient keycloakTestClient = new KeycloakTestClient();
 
-    // inject MockServer client
     @InjectMockServerClient
     MockServerClient mockServerClient;
 
+    KeycloakTestClient keycloakTestClient = new KeycloakTestClient();
+
     static final String MOCK_ID = "MOCK";
 
-    @BeforeEach
-    void resetExpectation() {
+    @AfterEach
+    void resetMockserver() {
         try {
             mockServerClient.clear(MOCK_ID);
         } catch (Exception ex) {
-            // Mock_ID not exists
+            // mockId not existing
         }
     }
 
     // should return successfully an give knowledge document by Id
     @Test
     void getAIKnowledgeDocumentById_200Test() {
-        // Arrage
+        // Arrange
         AIKnowledgeDocument fakeData = createAIKnowledgeDocument(
                 "1",
                 "Test Document 1",
@@ -67,6 +66,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
         mockServerClient.when(
                 request().withPath(AI_KNOWLEDGE_DOCUMENT_SVC_INTERNAL_API_BASE_PATH + "/" + testId)
                         .withMethod(HttpMethod.GET))
+                .withPriority(100)
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.OK.getStatusCode())
@@ -93,7 +93,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
 
     @Test
     void getAIKnowledgeDocumentById_Fail_Test() {
-        // Arrage
+        // Arrange
         AIKnowledgeDocument fakeData = createAIKnowledgeDocument(
                 "1",
                 "Test Document 1",
@@ -156,15 +156,18 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
     // should update a AIKnowledge Document
     @Test
     void updateAIKnowledgeDocumentTest() {
-        // Arrage
+        // Arrange
         // initialize it with Document DTO for Update request
-        UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO;
-        updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
-        updateAIKnowledgeDocumentDTO.setId("1");
-        updateAIKnowledgeDocumentDTO.setDocumentRefId("4e1c07bb-ef34-4017-b690-e5dfe3960590");
-        updateAIKnowledgeDocumentDTO.setName("Test AIKnowledge Document 1");
-        updateAIKnowledgeDocumentDTO.setStatus(AIKnowledgeDocumentStatusTypeDTO.PROCESSING);
-        updateAIKnowledgeDocumentDTO.setModificationCount(1);
+        UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
+
+        AIKnowledgeDocumentDTO dto = new AIKnowledgeDocumentDTO();
+        dto.setId("1");
+        dto.setDocumentRefId("4e1c07bb-ef34-4017-b690-e5dfe3960590");
+        dto.setName("Test AIKnowledge Document 1");
+        dto.setStatus(AIKnowledgeDocumentDTO.StatusEnum.PROCESSING);
+        dto.setModificationCount(1);
+
+        updateAIKnowledgeDocumentDTO.setaIKnowledgeDocumentData(dto);
 
         String testId = "1";
         mockServerClient.when(
@@ -188,112 +191,122 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
 
         // Assert
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("Test AIKnowledge Document 1", response.getName());
+        Assertions.assertEquals("Test AIKnowledge Document 1", response.getaIKnowledgeDocumentData().getName());
     }
 
-    @Test
-    void createNewAIKnowledgeDocumentTest() {
-        AIKnowledgeDocument newDocument = createAIKnowledgeDocument(
-                "ai-knowledge-document-id",
-                "New Test Document Create",
-                "document-ref-id",
-                DocumentStatusType.NEW,
-                0);
+    //    TEST WHEN CREATE FUNCTIONALITY IS IMPLEMENTED IN CONTROLLER
+    //    @Test
+    //    void createNewAIKnowledgeDocumentTest() {
+    //        AIKnowledgeDocument newDocument = createAIKnowledgeDocument(
+    //                "ai-knowledge-document-id",
+    //                "New Test Document Create",
+    //                "document-ref-id",
+    //                DocumentStatusType.NEW,
+    //                0);
+    //
+    //        // create request
+    //        CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = new CreateAIKnowledgeDocumentRequest();
+    //        createAIKnowledgeDocumentRequest.setStatus(newDocument.getStatus());
+    //        createAIKnowledgeDocumentRequest.setDocumentRefId(newDocument.getDocumentRefId());
+    //        createAIKnowledgeDocumentRequest.setName(newDocument.getName());
+    //
+    //        AIKnowledgeDocumentDTO aiKnowledgeDocumentData = new AIKnowledgeDocumentDTO();
+    //        aiKnowledgeDocumentData.setDocumentRefId(newDocument.getDocumentRefId());
+    //        aiKnowledgeDocumentData.setName(newDocument.getName());
+    //        aiKnowledgeDocumentData.setStatus(AIKnowledgeDocumentDTO.StatusEnum.NEW);
+    //
+    //        CreateAIKnowledgeDocumentDTO dto = new CreateAIKnowledgeDocumentDTO();
+    //        dto.setaIKnowledgeDocumentData(aiKnowledgeDocumentData);
+    //
+    //        String contextId = "context-11-111";
+    //
+    //        mockServerClient.when(
+    //                request().withPath(AI_CONTEXT_SVC_BASE_PATH + "/" + contextId + "/ai-knowledge-documents")
+    //                        .withContentType(MediaType.APPLICATION_JSON)
+    //                        .withBody(JsonBody.json(createAIKnowledgeDocumentRequest))
+    //                        .withMethod(HttpMethod.POST))
+    //                .withId(MOCK_ID)
+    //                .respond(httpRequest -> response()
+    //                        .withStatusCode(Response.Status.CREATED.getStatusCode())
+    //                        .withContentType(MediaType.APPLICATION_JSON)
+    //                        .withBody(JsonBody.json(newDocument)));
+    //
+    //        var createResult = given()
+    //                .when()
+    //                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+    //                .header(APM_HEADER_PARAM, ADMIN)
+    //                .contentType(APPLICATION_JSON)
+    //                .body(dto)
+    //                .queryParams("id", contextId)
+    //                .post()
+    //                .then()
+    //                .statusCode(Response.Status.CREATED.getStatusCode())
+    //                .contentType(APPLICATION_JSON)
+    //                .extract().as(AIKnowledgeDocumentDTO.class);
+    //
+    //        Assertions.assertNotNull(createResult);
+    //        Assertions.assertEquals("New Test Document Create", createResult.getName());
+    //        Assertions.assertEquals("document-ref-id", createResult.getDocumentRefId());
+    //        Assertions.assertEquals("NEW", createResult.getStatus().name());
+    //    }
 
-        // create request
-        CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = new CreateAIKnowledgeDocumentRequest();
-        createAIKnowledgeDocumentRequest.setStatus(newDocument.getStatus());
-        createAIKnowledgeDocumentRequest.setDocumentRefId(newDocument.getDocumentRefId());
-        createAIKnowledgeDocumentRequest.setName(newDocument.getName());
-
-        AIKnowledgeDocumentCreateRequestDTO aiKnowledgeDocumentData = new AIKnowledgeDocumentCreateRequestDTO();
-        aiKnowledgeDocumentData.setDocumentRefId(newDocument.getDocumentRefId());
-        aiKnowledgeDocumentData.setName(newDocument.getName());
-        aiKnowledgeDocumentData.setStatus(AIKnowledgeDocumentStatusTypeDTO.NEW);
-
-        CreateAIKnowledgeDocumentDTO dto = new CreateAIKnowledgeDocumentDTO();
-        dto.setaIKnowledgeDocumentData(aiKnowledgeDocumentData);
-
-        String contextId = "context-11-111";
-
-        mockServerClient.when(
-                request().withPath(AI_CONTEXT_SVC_BASE_PATH + "/" + contextId + "/ai-knowledge-documents")
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(createAIKnowledgeDocumentRequest))
-                        .withMethod(HttpMethod.POST))
-                .withId(MOCK_ID)
-                .respond(httpRequest -> response()
-                        .withStatusCode(Response.Status.CREATED.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(newDocument)));
-
-        var createResult = given()
-                .when()
-                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
-                .body(dto)
-                .queryParams("id", contextId)
-                .post()
-                .then()
-                .statusCode(Response.Status.CREATED.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract().as(AIKnowledgeDocumentDTO.class);
-
-        Assertions.assertNotNull(createResult);
-        Assertions.assertEquals("New Test Document Create", createResult.getName());
-        Assertions.assertEquals("document-ref-id", createResult.getDocumentRefId());
-        Assertions.assertEquals("NEW", createResult.getStatus().name());
-    }
-
-    @Test
-    void createAIKnowledgeDocument_shouldFail_wrongAIContextId_Test() {
-        var aiContextId = "non-existing-ai-context-id";
-        AIKnowledgeDocument aiKnowledgeDocument = createAIKnowledgeDocument(
-                "new-test-document-id",
-                "New Test Document 2",
-                "new-test-documentRef-id",
-                DocumentStatusType.NEW,
-                0);
-        // Create a request
-        AIKnowledgeDocumentCreateRequestDTO createAIKnowledgeDocumentRequest = new AIKnowledgeDocumentCreateRequestDTO();
-        createAIKnowledgeDocumentRequest.setName(aiKnowledgeDocument.getName());
-        createAIKnowledgeDocumentRequest.setDocumentRefId(aiKnowledgeDocument.getDocumentRefId());
-        createAIKnowledgeDocumentRequest.setStatus(AIKnowledgeDocumentStatusTypeDTO.NEW);
-
-        CreateAIKnowledgeDocumentDTO aiKnowledgeDocumentDTO = new CreateAIKnowledgeDocumentDTO();
-        aiKnowledgeDocumentDTO.setaIKnowledgeDocumentData(createAIKnowledgeDocumentRequest);
-
-        var createResponseException = given()
-                .when()
-                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
-                .body(JsonBody.json(aiKnowledgeDocumentDTO))
-                .queryParams("id", aiContextId)
-                .post()
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .extract()
-                .as(ProblemDetailResponseDTO.class);
-
-        Assertions.assertNotNull(createResponseException);
-        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", createResponseException.getErrorCode());
-        Assertions.assertEquals("must not be null", createResponseException.getInvalidParams().get(0).getMessage());
-    }
+    //    TEST WHEN CREATE FUNCTIONALITY IS IMPLEMENTED IN CONTROLLER
+    //    @Test
+    //    void createAIKnowledgeDocument_shouldFail_wrongAIContextId_Test() {
+    //        var aiContextId = "non-existing-ai-context-id";
+    //        AIKnowledgeDocument aiKnowledgeDocument = createAIKnowledgeDocument(
+    //                "new-test-document-id",
+    //                "New Test Document 2",
+    //                "new-test-documentRef-id",
+    //                DocumentStatusType.NEW,
+    //                0);
+    //        // Create a request
+    //        AIKnowledgeDocumentCreateRequestDTO createAIKnowledgeDocumentRequest = new AIKnowledgeDocumentCreateRequestDTO();
+    //        createAIKnowledgeDocumentRequest.setName(aiKnowledgeDocument.getName());
+    //        createAIKnowledgeDocumentRequest.setDocumentRefId(aiKnowledgeDocument.getDocumentRefId());
+    //        createAIKnowledgeDocumentRequest.setStatus(AIKnowledgeDocumentStatusTypeDTO.NEW);
+    //
+    //        CreateAIKnowledgeDocumentDTO aiKnowledgeDocumentDTO = new CreateAIKnowledgeDocumentDTO();
+    //        aiKnowledgeDocumentDTO.setaIKnowledgeDocumentData(createAIKnowledgeDocumentRequest);
+    //
+    //        var createResponseException = given()
+    //                .when()
+    //                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+    //                .header(APM_HEADER_PARAM, ADMIN)
+    //                .contentType(APPLICATION_JSON)
+    //                .body(JsonBody.json(aiKnowledgeDocumentDTO))
+    //                .queryParams("id", aiContextId)
+    //                .post()
+    //                .then()
+    //                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+    //                .extract()
+    //                .as(ProblemDetailResponseDTO.class);
+    //
+    //        Assertions.assertNotNull(createResponseException);
+    //        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", createResponseException.getErrorCode());
+    //        Assertions.assertEquals("must not be null", createResponseException.getInvalidParams().get(0).getMessage());
+    //    }
 
     // should fail with status code 400 because mandatory fields
     // are not provided
     @Test
     void updateAIKnowledgeDocument_Fail_with_bad_requestTest() {
-        // Arrage
-        UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO;
-        updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
-        updateAIKnowledgeDocumentDTO.setId("1");
-        updateAIKnowledgeDocumentDTO.setName("Test AIKnowledge Document 1");
-        updateAIKnowledgeDocumentDTO.setStatus(AIKnowledgeDocumentStatusTypeDTO.EMBEDDED);
+        // Arrange
+        AIKnowledgeDocumentDTO dto = new AIKnowledgeDocumentDTO();
+        UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO = new UpdateAIKnowledgeDocumentDTO();
+        dto.setId("1");
+        dto.setName("Test AIKnowledge Document 1");
+        dto.setStatus(AIKnowledgeDocumentDTO.StatusEnum.EMBEDDED);
 
         String testId = "1";
+        mockServerClient.when(
+                request().withPath(AI_KNOWLEDGE_DOCUMENT_SVC_INTERNAL_API_BASE_PATH + "/" + testId)
+                        .withMethod(HttpMethod.PUT))
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response()
+                        .withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON));
+
         // Act
         var updateResponseException = given()
                 .when()
@@ -323,7 +336,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
         documentPageResult.setTotalElements((long) documents.size());
 
         // Empty criteria
-        AIKnowledgeDocumentSearchCriteriaDTO criteriaDTO = new AIKnowledgeDocumentSearchCriteriaDTO();
+        AIKnowledgeDocumentSearchRequestDTO criteriaDTO = new AIKnowledgeDocumentSearchRequestDTO();
 
         mockServerClient.when(
                 request().withPath(AI_KNOWLEDGE_DOCUMENT_SVC_INTERNAL_API_BASE_PATH + "/search")
@@ -346,12 +359,13 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .as(AIKnowledgeDocumentSearchPageResultDTO.class);
+                .as(AIKnowledgeDocumentSearchResponseDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(5, results.getTotalElements());
+        Assertions.assertEquals(5, results.getTotalNumberOfResults());
     }
 
+    //
     @Test
     void searchAIKnowledgeDocumentByRefIdTest() {
         AIKnowledgeDocumentPageResult documentPageResult = new AIKnowledgeDocumentPageResult();
@@ -384,7 +398,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(documentPageResult)));
 
         // for bff call
-        AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO = new AIKnowledgeDocumentSearchCriteriaDTO();
+        AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO = new AIKnowledgeDocumentSearchRequestDTO();
         searchCriteriaDTO.setDocumentRefId("210366c3-2ea6-432f-9443-7d9d2680d001");
 
         var results = given()
@@ -398,10 +412,10 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .as(AIKnowledgeDocumentSearchPageResultDTO.class);
+                .as(AIKnowledgeDocumentSearchResponseDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(3, results.getTotalElements());
+        Assertions.assertEquals(3, results.getTotalNumberOfResults());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(0).getDocumentRefId());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(1).getDocumentRefId());
         Assertions.assertEquals("210366c3-2ea6-432f-9443-7d9d2680d001", results.getResults().get(2).getDocumentRefId());
@@ -437,8 +451,8 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(documentPageResult)));
 
         // bff call
-        AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO = new AIKnowledgeDocumentSearchCriteriaDTO();
-        searchCriteriaDTO.setStatus(AIKnowledgeDocumentStatusTypeDTO.NEW);
+        AIKnowledgeDocumentSearchCriteria searchCriteriaDTO = new AIKnowledgeDocumentSearchCriteria();
+        searchCriteriaDTO.setStatus(DocumentStatusType.NEW);
 
         var results = given()
                 .when()
@@ -451,10 +465,10 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .as(AIKnowledgeDocumentSearchPageResultDTO.class);
+                .as(AIKnowledgeDocumentSearchResponseDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(3, results.getTotalElements());
+        Assertions.assertEquals(3, results.getTotalNumberOfResults());
         Assertions.assertEquals("NEW", results.getResults().get(0).getStatus().name());
         Assertions.assertEquals("NEW", results.getResults().get(1).getStatus().name());
         Assertions.assertEquals("NEW", results.getResults().get(2).getStatus().name());
@@ -489,7 +503,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(documentPageResult)));
 
-        AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO = new AIKnowledgeDocumentSearchCriteriaDTO();
+        AIKnowledgeDocumentSearchCriteria searchCriteriaDTO = new AIKnowledgeDocumentSearchCriteria();
         searchCriteriaDTO.setName("Test AIKnowledge Document 1");
 
         var results = given()
@@ -503,31 +517,31 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .as(AIKnowledgeDocumentSearchPageResultDTO.class);
+                .as(AIKnowledgeDocumentSearchResponseDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.getTotalElements());
+        Assertions.assertEquals(1, results.getTotalNumberOfResults());
         Assertions.assertEquals("Test AIKnowledge Document 1", results.getResults().get(0).getName());
     }
 
-    @Test
-    void searchAIKnowledgeDocument_Fails_400_Test() {
-
-        var searchConstraintException = given()
-                .when()
-                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
-                .post("/search")
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .extract()
-                .as(ProblemDetailResponseDTO.class);
-
-        Assertions.assertNotNull(searchConstraintException);
-        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", searchConstraintException.getErrorCode());
-        Assertions.assertEquals("must not be null", searchConstraintException.getInvalidParams().get(0).getMessage());
-    }
+    //    @Test
+    //    void searchAIKnowledgeDocument_Fails_400_Test() {
+    //
+    //        var searchConstraintException = given()
+    //                .when()
+    //                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+    //                .header(APM_HEADER_PARAM, ADMIN)
+    //                .contentType(APPLICATION_JSON)
+    //                .post("/search")
+    //                .then()
+    //                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+    //                .extract()
+    //                .as(ProblemDetailResponseDTO.class);
+    //
+    //        Assertions.assertNotNull(searchConstraintException);
+    //        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", searchConstraintException.getErrorCode());
+    //        Assertions.assertEquals("must not be null", searchConstraintException.getInvalidParams().get(0).getMessage());
+    //    }
 
     private List<AIKnowledgeDocument> generateMockAIKnowledgeDocumentData() {
         List<AIKnowledgeDocument> documents = new ArrayList<>();

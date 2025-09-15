@@ -34,20 +34,6 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createAIKnowledgeDocument(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO, String id) {
-        // Map dto to request
-        CreateAIKnowledgeDocumentRequest createAIKnowledgeDocumentRequest = documentMapper
-                .mapCreate(createAIKnowledgeDocumentDTO);
-        // then send the creation request
-        try (Response createResponse = aiKnowledgeDocumentApi.createKnowledgeDocument(id,
-                createAIKnowledgeDocumentRequest)) {
-            var createDocument = createResponse.readEntity(AIKnowledgeDocument.class);
-
-            return Response.status(createResponse.getStatus()).entity(documentMapper.map(createDocument)).build();
-        }
-    }
-
-    @Override
     public Response deleteAIKnowledgeDocument(String id) {
         try (Response response = aiKnowledgeDocumentApi.deleteKnowledgeDocument(id)) {
             return Response.status(response.getStatus()).build();
@@ -64,30 +50,24 @@ public class AIKnowledgeDocumentController implements AiKnowledgeDocumentBffServ
     }
 
     @Override
-    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchCriteriaDTO aiKnowledgeDocumentSearchCriteriaDTO) {
-
-        AIKnowledgeDocumentSearchCriteria searchCriteria = documentMapper.mapSearch(aiKnowledgeDocumentSearchCriteriaDTO);
+    public Response searchAIKnowledgeDocuments(AIKnowledgeDocumentSearchRequestDTO aiKnowledgeDocumentSearchRequestDTO) {
+        AIKnowledgeDocumentSearchCriteria searchCriteria = documentMapper.mapSearch(aiKnowledgeDocumentSearchRequestDTO);
         try (Response searchResponse = aiKnowledgeDocumentApi.searchAIKnowledgeDocuments(searchCriteria)) {
             AIKnowledgeDocumentPageResult documentPageResult = searchResponse
                     .readEntity(AIKnowledgeDocumentPageResult.class);
-            AIKnowledgeDocumentSearchPageResultDTO pageResultDTO = documentMapper.mapSearchPageResult(documentPageResult);
+            AIKnowledgeDocumentSearchResponseDTO pageResultDTO = documentMapper.mapSearchPageResult(documentPageResult);
             return Response.status(searchResponse.getStatus()).entity(pageResultDTO).build();
         }
-
     }
 
     @Override
     public Response updateAIKnowledgeDocument(String id, UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO) {
-
-        //  Map dto to request
         UpdateAIKnowledgeDocumentRequest updateAIKnowledgeDocumentRequest = documentMapper
                 .mapUpdate(updateAIKnowledgeDocumentDTO);
-        // and update AIKnowledge Document
         try (Response updateResponse = aiKnowledgeDocumentApi.updateKnowledgeDocument(id,
                 updateAIKnowledgeDocumentRequest)) {
             return Response.status(updateResponse.getStatus()).entity(updateAIKnowledgeDocumentDTO).build();
         }
-
     }
 
     @ServerExceptionMapper

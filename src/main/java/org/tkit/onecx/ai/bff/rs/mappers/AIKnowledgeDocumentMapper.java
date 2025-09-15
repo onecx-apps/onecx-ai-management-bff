@@ -12,6 +12,16 @@ public interface AIKnowledgeDocumentMapper {
 
     AIKnowledgeDocumentDTO map(AIKnowledgeDocument aiKnowledgeDocument);
 
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    AIKnowledgeDocument map(AIKnowledgeDocumentDTO aiKnowledgeDocumentDTO);
+
+    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
+    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
+    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
+    @Mapping(target = "modificationCount", ignore = true)
     UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
 
     @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
@@ -19,9 +29,10 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
     CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
 
-    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchCriteriaDTO searchCriteriaDTO);
+    AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);
 
     @Mapping(target = "results", source = "stream")
+    @Mapping(target = "totalNumberOfResults", source = "totalElements")
     @Mapping(target = "removeResultsItem", ignore = true)
-    AIKnowledgeDocumentSearchPageResultDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
+    AIKnowledgeDocumentSearchResponseDTO mapSearchPageResult(AIKnowledgeDocumentPageResult knowledgeDocumentPageResult);
 }
