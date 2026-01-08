@@ -451,7 +451,7 @@ paths:
         "204":
           description: AIProvider deleted
 
-  /AIKnowledgeBase/search:
+  /aiKnowledgeBase/search:
     post:
       operationId: searchAIKnowledgeBases
       tags:
@@ -473,7 +473,7 @@ paths:
           description: Bad request
         "500":
           description: Something went wrong
-  /AIKnowledgeBase/{id}:
+  /aiKnowledgeBase/{id}:
     get:
       x-onecx:
         permissions:
