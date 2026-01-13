@@ -26,7 +26,6 @@ public interface AIKnowledgeBaseMapper {
     @Mapping(target = "contexts", source = "dataObject.aiContext")
     UpdateAIKnowledgeBaseRequest mapUpdate(UpdateAIKnowledgeBaseRequestDTO updateAIKnowledgeBaseRequestDTO);
 
-    @Mapping(target = "tenandId", ignore = true)
     @Mapping(target = "appId", ignore = true)
     AIKnowledgeBaseSearchCriteria mapSearch(SearchAIKnowledgeBaseRequestDTO searchAIKnowledgeBaseRequestDTO);
 

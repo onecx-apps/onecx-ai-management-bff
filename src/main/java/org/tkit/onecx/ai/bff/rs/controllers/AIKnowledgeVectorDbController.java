@@ -17,13 +17,13 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.ai.management.bff.client.api.AiKnowledgeVectorDbInternalApi;
 import gen.org.tkit.onecx.ai.management.bff.client.model.AIKnowledgeVectorDb;
 import gen.org.tkit.onecx.ai.management.bff.client.model.UpdateAIKnowledgeVectorDbRequest;
-import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeVectorDbBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeVectorDbApiService;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
-public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbBffServiceApiService {
+public class AIKnowledgeVectorDbController implements AiKnowledgeVectorDbApiService {
     @Inject
     @RestClient
     AiKnowledgeVectorDbInternalApi aiKnowledgeVectorDbInternalApi;

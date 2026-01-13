@@ -17,46 +17,51 @@ import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 })
 public interface AIContextMapper {
 
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "appId", ignore = true)
     @Mapping(target = "provider", source = "llmProvider")
     @Mapping(target = "aiKnowledgeBase", ignore = true) // doesn't exist in SVC
-    @Mapping(target = "aIKnowledgeVectorDb", source = "vectorDb")
-    @Mapping(target = "aIKnowledgeUrl", source = "urls")
-    @Mapping(target = "aIKnowledgeDbs", source = "dbs")
-    @Mapping(target = "aIKnowledgeDocuments", source = "documents")
-    @Mapping(target = "removeAIKnowledgeUrlItem", ignore = true)
-    @Mapping(target = "removeAIKnowledgeDbsItem", ignore = true)
-    @Mapping(target = "removeAIKnowledgeDocumentsItem", ignore = true)
+    @Mapping(target = "aiKnowledgeVectorDb", source = "vectorDb")
+    @Mapping(target = "aiKnowledgeUrl", source = "urls")
+    @Mapping(target = "aiKnowledgeDbs", source = "dbs")
+    @Mapping(target = "aiKnowledgeDocuments", source = "documents")
+    @Mapping(target = "removeAiKnowledgeUrlItem", ignore = true)
+    @Mapping(target = "removeAiKnowledgeDocumentsItem", ignore = true)
+    @Mapping(target = "removeAiKnowledgeDbsItem", ignore = true)
     AIContextDTO map(AIContext aiContext);
 
     @Mapping(target = "llmProvider", source = "provider")
-    @Mapping(target = "vectorDb", source = "aIKnowledgeVectorDb")
-    @Mapping(target = "urls", source = "aIKnowledgeUrl")
-    @Mapping(target = "dbs", source = "aIKnowledgeDbs")
-    @Mapping(target = "documents", source = "aIKnowledgeDocuments")
+    @Mapping(target = "vectorDb", source = "aiKnowledgeVectorDb")
+    @Mapping(target = "urls", source = "aiKnowledgeUrl")
+    @Mapping(target = "dbs", source = "aiKnowledgeDbs")
+    @Mapping(target = "documents", source = "aiKnowledgeDocuments")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
     @Mapping(target = "llmSystemMessage", ignore = true)
     AIContext map(AIContextDTO aiContextDTO);
 
+    @Mapping(target = "description", source = "dataObject.description")
+    @Mapping(target = "appId", source = "dataObject.appId")
     @Mapping(target = "name", source = "dataObject.name")
     @Mapping(target = "llmSystemMessage", ignore = true)
     @Mapping(target = "llmProvider", source = "dataObject.provider")
-    @Mapping(target = "vectorDb", source = "dataObject.aIKnowledgeVectorDb")
-    @Mapping(target = "urls", source = "dataObject.aIKnowledgeUrl")
-    @Mapping(target = "dbs", source = "dataObject.aIKnowledgeDbs")
-    @Mapping(target = "documents", source = "dataObject.aIKnowledgeDocuments")
+    @Mapping(target = "vectorDb", source = "dataObject.aiKnowledgeVectorDb")
+    @Mapping(target = "urls", source = "dataObject.aiKnowledgeUrl")
+    @Mapping(target = "dbs", source = "dataObject.aiKnowledgeDbs")
+    @Mapping(target = "documents", source = "dataObject.aiKnowledgeDocuments")
     CreateAIContextRequest mapCreate(CreateAIContextRequestDTO createAIContextRequestDTO);
 
     @Mapping(target = "name", source = "dataObject.name")
+    @Mapping(target = "description", source = "dataObject.description")
+    @Mapping(target = "appId", source = "dataObject.appId")
     @Mapping(target = "llmSystemMessage", ignore = true)
     @Mapping(target = "llmProvider", source = "dataObject.provider")
-    @Mapping(target = "vectorDb", source = "dataObject.aIKnowledgeVectorDb")
-    @Mapping(target = "urls", source = "dataObject.aIKnowledgeUrl")
-    @Mapping(target = "dbs", source = "dataObject.aIKnowledgeDbs")
-    @Mapping(target = "documents", source = "dataObject.aIKnowledgeDocuments")
+    @Mapping(target = "vectorDb", source = "dataObject.aiKnowledgeVectorDb")
+    @Mapping(target = "urls", source = "dataObject.aiKnowledgeUrl")
+    @Mapping(target = "dbs", source = "dataObject.aiKnowledgeDbs")
+    @Mapping(target = "documents", source = "dataObject.aiKnowledgeDocuments")
     UpdateAIContextRequest mapUpdate(UpdateAIContextRequestDTO updateAIContextRequestDTO);
 
-    @Mapping(target = "tenandId", ignore = true)
     AIContextSearchCriteria mapSearch(SearchAIContextRequestDTO searchAIContextRequestDTO);
 
     @Mapping(target = "removeStreamItem", ignore = true)

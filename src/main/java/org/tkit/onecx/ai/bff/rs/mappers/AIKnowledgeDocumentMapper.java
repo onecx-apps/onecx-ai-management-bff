@@ -18,15 +18,15 @@ public interface AIKnowledgeDocumentMapper {
     @Mapping(target = "modificationUser", ignore = true)
     AIKnowledgeDocument map(AIKnowledgeDocumentDTO aiKnowledgeDocumentDTO);
 
-    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
-    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
-    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
+    @Mapping(target = "status", source = "aiKnowledgeDocumentData.status")
+    @Mapping(target = "name", source = "aiKnowledgeDocumentData.name")
+    @Mapping(target = "documentRefId", source = "aiKnowledgeDocumentData.documentRefId")
     @Mapping(target = "modificationCount", ignore = true)
     UpdateAIKnowledgeDocumentRequest mapUpdate(UpdateAIKnowledgeDocumentDTO updateAIKnowledgeDocumentDTO);
 
-    @Mapping(target = "name", source = "aIKnowledgeDocumentData.name")
-    @Mapping(target = "status", source = "aIKnowledgeDocumentData.status")
-    @Mapping(target = "documentRefId", source = "aIKnowledgeDocumentData.documentRefId")
+    @Mapping(target = "name", source = "aiKnowledgeDocumentData.name")
+    @Mapping(target = "status", source = "aiKnowledgeDocumentData.status")
+    @Mapping(target = "documentRefId", source = "aiKnowledgeDocumentData.documentRefId")
     CreateAIKnowledgeDocumentRequest mapCreate(CreateAIKnowledgeDocumentDTO createAIKnowledgeDocumentDTO);
 
     AIKnowledgeDocumentSearchCriteria mapSearch(AIKnowledgeDocumentSearchRequestDTO searchCriteriaDTO);

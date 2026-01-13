@@ -16,13 +16,13 @@ import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.management.bff.client.api.AiContextInternalApi;
 import gen.org.tkit.onecx.ai.management.bff.client.model.*;
-import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiContextBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiContextApiService;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
-public class AIContextController implements AiContextBffServiceApiService {
+public class AIContextController implements AiContextApiService {
     @Inject
     @RestClient
     AiContextInternalApi aiContextInternalApi;

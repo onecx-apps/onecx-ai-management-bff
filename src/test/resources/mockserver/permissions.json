@@ -15,11 +15,11 @@
         "json": {
           "appId": "onecx-ai-management-bff",
           "permissions": {
-            "AIKnowledgeDocument": ["read", "write", "delete"],
-            "AIKnowledgeVectorDb": ["read", "write", "delete"],
-            "AIProvider": ["read", "write", "delete"],
-            "aiKnowledgeBase": ["read", "write", "delete"],
-            "aiContext":  ["read", "write", "delete"],
+            "ai-knowledge-document": ["read", "write", "delete"],
+            "ai-knowledge-vdb": ["read", "write", "delete"],
+            "ai-provider": ["read", "write", "delete"],
+            "ai-knowledge-base": ["read", "write", "delete"],
+            "ai-context":  ["read", "write", "delete"],
             "permissions": [
               "admin-write",
               "admin-read"
@@ -46,11 +46,11 @@
         "json": {
           "appId": "onecx-ai-management-bff",
           "permissions": {
-            "AIKnowledgeDocument": ["read"],
-            "AIKnowledgeVectorDb": ["read"],
-            "AIProvider": ["read"],
-            "aiKnowledgeBase": ["read"],
-            "aiContext":  ["read"],
+            "ai-knowledge-document": ["read"],
+            "ai-knowledge-vdb": ["read"],
+            "ai-provider": ["read"],
+            "ai-knowledge-base": ["read"],
+            "ai-context":  ["read"],
             "permissions": [
               "admin-write",
               "admin-read"

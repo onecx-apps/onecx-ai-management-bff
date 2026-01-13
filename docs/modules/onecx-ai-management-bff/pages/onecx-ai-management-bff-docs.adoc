@@ -1,10 +1,12 @@
 
 include::onecx-ai-management-bff-attributes.adoc[opts=optional]
 
-=== Default properties
+{docker-registry}[Link to Docker registry]
+
+== Default properties
 
 .{properties-file}
-[%collapsible%open]
+[%collapsible]
 ====
 [source,properties,subs=attributes+]
 ----
@@ -14,36 +16,31 @@ quarkus.http.auth.permission.default.paths=/*
 quarkus.http.auth.permission.default.policy=authenticated
 onecx.permissions.application-id=${quarkus.application.name}
 org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.config-key=onecx_ai_service
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.base-package=gen.org.tkit.onecx.ai.management.bff.client
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.return-response=true
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.enable-security-generation=false
-quarkus.openapi-generator.codegen.spec.ai_management_internal_openapi_yaml.type-mappings.File=byte[]
-%prod.quarkus.rest-client.onecx_ai_service.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 %prod.quarkus.rest-client.onecx_ai_service.url=http://onecx-ai-svc:8080
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.config-key=onecx_ai_service
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.base-package=gen.org.tkit.onecx.ai.management.bff.client
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.return-response=true
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
+quarkus.openapi-generator.codegen.spec.ai_management_svc_internal_yaml.enable-security-generation=false
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+%prod.quarkus.rest-client.onecx_ai_service.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 ----
 ====
 
-=== Extensions
-
+== Extensions
+.Extensions List
+[%collapsible]
+====
 include::onecx-ai-management-bff-extensions.adoc[opts=optional]
+====
 
-=== Container
+== Helm
 
-{docker-registry}[Docker registry]
+{helm-registry}[Link to Helm registry]
 
-
-=== Helm
-
-{helm-registry}[Helm registry]
-
-Default values
-
-.{helm-file}
+.Default values in {helm-file}
 [source,yaml]
 ----
 app:
@@ -62,6 +59,22 @@ app:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
+          ai-knowledge-vdb:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          ai-knowledge-base:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          ai-provider:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+          ai-context:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
     keycloak:
       client:
         enabled: true
@@ -70,4 +83,3 @@ app:
             defaultClientScopes: [ocx-ai:all, ocx-pm:read]
 
 ----
-
