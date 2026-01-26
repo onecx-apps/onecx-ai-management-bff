@@ -270,8 +270,8 @@ class AIContextControllerTest extends AbstractTest {
         AIContext context = new AIContext();
         context.setId(id);
         context.setName(name);
-        context.setDescription(description);
-        context.setAppId(appId);
+        //        context.setDescription(description);
+        //        context.setAppId(appId);
         context.setModificationCount(modificationCount);
         return context;
     }

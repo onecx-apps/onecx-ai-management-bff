@@ -167,7 +167,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
         dto.setStatus(AIKnowledgeDocumentDTO.StatusEnum.PROCESSING);
         dto.setModificationCount(1);
 
-        updateAIKnowledgeDocumentDTO.setaIKnowledgeDocumentData(dto);
+        updateAIKnowledgeDocumentDTO.setAiKnowledgeDocumentData(dto);
 
         String testId = "1";
         mockServerClient.when(
@@ -191,7 +191,7 @@ class AIKnowledgeDocumentControllerTest extends AbstractTest {
 
         // Assert
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("Test AIKnowledge Document 1", response.getaIKnowledgeDocumentData().getName());
+        Assertions.assertEquals("Test AIKnowledge Document 1", response.getAiKnowledgeDocumentData().getName());
     }
 
     //    TEST WHEN CREATE FUNCTIONALITY IS IMPLEMENTED IN CONTROLLER

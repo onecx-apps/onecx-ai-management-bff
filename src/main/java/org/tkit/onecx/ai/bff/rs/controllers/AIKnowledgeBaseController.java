@@ -16,13 +16,13 @@ import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.ai.management.bff.client.api.AiKnowledgeBaseInternalApi;
 import gen.org.tkit.onecx.ai.management.bff.client.model.*;
-import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeBaseBffServiceApiService;
+import gen.org.tkit.onecx.ai.management.bff.rs.internal.AiKnowledgeBaseApiService;
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
-public class AIKnowledgeBaseController implements AiKnowledgeBaseBffServiceApiService {
+public class AIKnowledgeBaseController implements AiKnowledgeBaseApiService {
     @Inject
     @RestClient
     AiKnowledgeBaseInternalApi aiKnowledgeBaseInternalApi;

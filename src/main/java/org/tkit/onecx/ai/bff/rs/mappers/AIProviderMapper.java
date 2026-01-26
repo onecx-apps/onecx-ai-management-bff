@@ -37,7 +37,6 @@ public interface AIProviderMapper {
     UpdateAIProviderRequest mapUpdate(UpdateAIProviderDTO updateAIKnowledgeBaseRequestDTO);
 
     @Mapping(target = "apiKey", ignore = true)
-    @Mapping(target = "tenandId", ignore = true)
     AIProviderSearchCriteria mapSearch(AIProviderSearchRequestDTO searchAIKnowledgeBaseRequestDTO);
 
     @Mapping(target = "removeResultsItem", ignore = true)

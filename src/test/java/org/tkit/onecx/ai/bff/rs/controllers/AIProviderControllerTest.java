@@ -22,15 +22,16 @@ import gen.org.tkit.onecx.ai.management.bff.client.model.*;
 // BFF API DTOs (for RestAssured requests/responses)
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.keycloak.client.KeycloakTestClient;
 
 @QuarkusTest
 @LogService
+@TestHTTPEndpoint(AIProviderController.class)
 class AIProviderControllerTest extends AbstractTest {
 
     private static final String AI_PROVIDER_API_BASE_PATH = "/internal/ai/ai-providers";
-    private static final String BFF_BASE_PATH = "/aIProvider";
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
@@ -67,7 +68,7 @@ class AIProviderControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .get(BFF_BASE_PATH + "/" + testId)
+                .get(testId)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
@@ -110,7 +111,7 @@ class AIProviderControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(requestDTO)
-                .post(BFF_BASE_PATH + "/search")
+                .post("/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
@@ -165,7 +166,7 @@ class AIProviderControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(createDTO)
-                .post(BFF_BASE_PATH)
+                .post()
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .extract()
@@ -220,7 +221,7 @@ class AIProviderControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(updateDTO)
-                .put(BFF_BASE_PATH + "/" + testId)
+                .put(testId)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
@@ -246,7 +247,7 @@ class AIProviderControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .delete(BFF_BASE_PATH + "/" + testId)
+                .delete(testId)
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
