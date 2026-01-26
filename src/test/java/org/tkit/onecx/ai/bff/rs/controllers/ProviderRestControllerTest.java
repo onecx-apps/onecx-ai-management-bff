@@ -28,8 +28,8 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 
 @QuarkusTest
 @LogService
-@TestHTTPEndpoint(AIProviderController.class)
-class AIProviderControllerTest extends AbstractTest {
+@TestHTTPEndpoint(ProviderRestController.class)
+class ProviderRestControllerTest extends AbstractTest {
 
     private static final String AI_PROVIDER_API_BASE_PATH = "/internal/ai/ai-providers";
 
@@ -49,12 +49,13 @@ class AIProviderControllerTest extends AbstractTest {
     }
 
     @Test
-    void getAIProviderById_200Test() {
-        AIProvider fakeData = createAIProvider("1", "Test Provider", "desc", "url", "app", "model", "v1", "key", 0);
+    void getProviderById_200Test() {
+        ProviderInternal fakeData = new ProviderInternal().name("provider1").modelName("llama2")
+                .type(ProviderTypeInternal.OLLAMA);
 
         String testId = "1";
         mockServerClient.when(
-                request().withPath(AI_PROVIDER_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/providers/" + testId)
                         .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .withId(MOCK_ID)
@@ -72,23 +73,25 @@ class AIProviderControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(AIProvider.class);
+                .as(ProviderDTO.class);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("Test Provider", response.getName());
+        Assertions.assertEquals(fakeData.getName(), response.getName());
+        Assertions.assertEquals(fakeData.getModelName(), response.getModelName());
+        Assertions.assertEquals(fakeData.getType().name(), response.getType().name());
     }
 
     @Test
-    void searchAIProviderTest() {
-        AIProviderSearchRequestDTO requestDTO = new AIProviderSearchRequestDTO();
-        requestDTO.setName("Provider");
+    void searchProviderTest() {
+        ProviderSearchCriteriaInternal requestDTO = new ProviderSearchCriteriaInternal();
+        requestDTO.setName("Provider1");
 
-        AIProviderSearchCriteria criteria = new AIProviderSearchCriteria();
-        criteria.setName("Provider");
+        ProviderSearchCriteriaDTO criteria = new ProviderSearchCriteriaDTO();
+        criteria.setName("Provider1");
 
-        AIProvider provider1 = createAIProvider("1", "Provider", "desc", "url", "app", "model", "v1", "key", 0);
+        ProviderInternal provider1 = new ProviderInternal().name("Provider1").description("desc").modelName("model");
 
-        AIProviderPageResult pageResult = new AIProviderPageResult();
+        ProviderPageResultInternal pageResult = new ProviderPageResultInternal();
         pageResult.setNumber(0);
         pageResult.setSize(10);
         pageResult.setTotalPages(1L);
@@ -96,7 +99,7 @@ class AIProviderControllerTest extends AbstractTest {
         pageResult.setTotalElements(1L);
 
         mockServerClient.when(
-                request().withPath(AI_PROVIDER_API_BASE_PATH + "/search")
+                request().withPath("/internal/providers/search")
                         .withMethod(HttpMethod.POST)
                         .withBody(JsonBody.json(criteria)))
                 .withId(MOCK_ID)
@@ -115,50 +118,44 @@ class AIProviderControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(AIProviderSearchResponseDTO.class);
+                .as(ProviderPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.getTotalNumberOfResults().intValue());
-        Assertions.assertEquals("Provider", results.getResults().get(0).getName());
+        Assertions.assertEquals(pageResult.getSize(), results.getSize());
+        Assertions.assertEquals(provider1.getName(), results.getStream().get(0).getName());
     }
 
     @Test
-    void createAIProviderTest() {
-        AIProviderDTO dataObject = new AIProviderDTO();
-        dataObject.setId("new-id");
-        dataObject.setName("New Provider");
-        dataObject.setDescription("desc");
-        dataObject.setLlmUrl("url");
-        dataObject.setAppId("app");
-        dataObject.setModelName("model");
-        dataObject.setModelVersion("v1");
-        dataObject.setApiKey("key");
-
-        CreateAIProviderDTO createDTO = new CreateAIProviderDTO();
-        createDTO.setDataObject(dataObject);
-
-        CreateAIProviderRequest createRequest = new CreateAIProviderRequest();
+    void createProviderTest() {
+        CreateProviderRequestInternal createRequest = new CreateProviderRequestInternal();
         createRequest.setName("New Provider");
         createRequest.setDescription("desc");
         createRequest.setLlmUrl("url");
-        createRequest.setAppId("app");
         createRequest.setModelName("model");
-        createRequest.setModelVersion("v1");
         createRequest.setApiKey("key");
+        createRequest.setType(ProviderTypeInternal.OLLAMA);
 
-        AIProvider responseDTO = new AIProvider();
-        responseDTO.setId("new-id");
-        responseDTO.setName("New Provider");
+        ProviderInternal responseProvider = new ProviderInternal();
+        responseProvider.setId("new-id");
+        responseProvider.setName("New Provider");
 
         mockServerClient.when(
-                request().withPath(AI_PROVIDER_API_BASE_PATH)
+                request().withPath("/internal/providers")
                         .withMethod(HttpMethod.POST)
                         .withBody(JsonBody.json(createRequest)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.CREATED.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(responseDTO)));
+                        .withBody(JsonBody.json(responseProvider)));
+
+        CreateProviderRequestDTO createDTO = new CreateProviderRequestDTO();
+        createDTO.setName("New Provider");
+        createDTO.setDescription("desc");
+        createDTO.setLlmUrl("url");
+        createDTO.setModelName("model");
+        createDTO.setApiKey("key");
+        createDTO.setType(ProviderTypeDTO.OLLAMA);
 
         var response = given()
                 .when()
@@ -170,50 +167,45 @@ class AIProviderControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .extract()
-                .as(AIProviderDTO.class);
+                .as(ProviderDTO.class);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("New Provider", response.getName());
+        Assertions.assertEquals(responseProvider.getName(), response.getName());
     }
 
     @Test
-    void updateAIProviderTest() {
-        AIProviderDTO dataObject = new AIProviderDTO();
-        dataObject.setId("1");
-        dataObject.setName("Updated Provider");
-        dataObject.setDescription("desc");
-        dataObject.setLlmUrl("url");
-        dataObject.setAppId("app");
-        dataObject.setModelName("model");
-        dataObject.setModelVersion("v2");
-        dataObject.setApiKey("key");
+    void updateProviderTest() {
 
-        UpdateAIProviderDTO updateDTO = new UpdateAIProviderDTO();
-        updateDTO.setDataObject(dataObject);
-
-        UpdateAIProviderRequest updateRequest = new UpdateAIProviderRequest();
+        UpdateProviderRequestInternal updateRequest = new UpdateProviderRequestInternal();
         updateRequest.setName("Updated Provider");
         updateRequest.setDescription("desc");
         updateRequest.setLlmUrl("url");
-        updateRequest.setAppId("app");
         updateRequest.setModelName("model");
-        updateRequest.setModelVersion("v2");
         updateRequest.setApiKey("key");
+        updateRequest.setModificationCount(0);
 
-        AIProvider responseDTO = new AIProvider();
-        responseDTO.setId("1");
-        responseDTO.setName("Updated Provider");
+        ProviderInternal responseProvider = new ProviderInternal();
+        responseProvider.setId("1");
+        responseProvider.setName("Updated Provider");
 
         String testId = "1";
         mockServerClient.when(
-                request().withPath(AI_PROVIDER_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/providers/" + testId)
                         .withMethod(HttpMethod.PUT)
                         .withBody(JsonBody.json(updateRequest)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(responseDTO)));
+                        .withBody(JsonBody.json(responseProvider)));
+
+        UpdateProviderRequestDTO updateDTO = new UpdateProviderRequestDTO();
+        updateDTO.setName("Updated Provider");
+        updateDTO.setDescription("desc");
+        updateDTO.setLlmUrl("url");
+        updateDTO.setModelName("model");
+        updateDTO.setApiKey("key");
+        updateDTO.setModificationCount(0);
 
         var response = given()
                 .when()
@@ -225,18 +217,38 @@ class AIProviderControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(UpdateAIProviderDTO.class);
+                .as(ProviderDTO.class);
 
         Assertions.assertNotNull(response);
-        Assertions.assertNotNull(response.getDataObject());
-        Assertions.assertEquals("Updated Provider", response.getDataObject().getName());
+        Assertions.assertEquals(responseProvider.getName(), response.getName());
     }
 
     @Test
-    void deleteAIProviderTest() {
+    void updateProviderTest_400_ConstraintException() {
+
+        UpdateProviderRequestDTO updateDTO = new UpdateProviderRequestDTO();
+        updateDTO.setName("Updated Provider");
+        updateDTO.setDescription("desc");
+        updateDTO.setLlmUrl("url");
+        updateDTO.setModelName("model");
+        updateDTO.setApiKey("key");
+
+        given()
+                .when()
+                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(updateDTO)
+                .put("1")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    void deleteProviderTest() {
         String testId = "1";
         mockServerClient.when(
-                request().withPath(AI_PROVIDER_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/providers/" + testId)
                         .withMethod(HttpMethod.DELETE))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
@@ -252,18 +264,23 @@ class AIProviderControllerTest extends AbstractTest {
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
-    private AIProvider createAIProvider(String id, String name, String description, String llmUrl, String appId,
-            String modelName, String modelVersion, String apiKey, int modificationCount) {
-        AIProvider dto = new AIProvider();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setDescription(description);
-        dto.setLlmUrl(llmUrl);
-        dto.setAppId(appId);
-        dto.setModelName(modelName);
-        dto.setModelVersion(modelVersion);
-        dto.setApiKey(apiKey);
-        dto.setModificationCount(modificationCount);
-        return dto;
+    @Test
+    void deleteProvider_ClientException_Test() {
+        String testId = "1";
+        mockServerClient.when(
+                request().withPath("/internal/providers/" + testId)
+                        .withMethod(HttpMethod.DELETE))
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response()
+                        .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode()));
+
+        given()
+                .when()
+                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .delete(testId)
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 }

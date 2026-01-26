@@ -10,23 +10,14 @@ app:
       enabled: true
       spec:
         permissions:
-          ai-knowledge-document:
+          configuration:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
-          ai-knowledge-vdb:
+          provider:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
-            delete: permission on all DELETE requests
-          ai-knowledge-base:
-            read: permission on all GET requests and POST search
-            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
-            delete: permission on all DELETE requests
-          ai-provider:
-            read: permission on all GET requests and POST search
-            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
-            delete: permission on all DELETE requests
-          ai-context:
+          mcpServer:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests

@@ -17,9 +17,7 @@ import org.mockserver.model.MediaType;
 import org.tkit.onecx.ai.bff.rs.AbstractTest;
 import org.tkit.quarkus.log.cdi.LogService;
 
-// Client model classes (for MockServer responses)
 import gen.org.tkit.onecx.ai.management.bff.client.model.*;
-// BFF API DTOs (for RestAssured requests/responses)
 import gen.org.tkit.onecx.ai.management.bff.rs.internal.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -28,10 +26,9 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 
 @QuarkusTest
 @LogService
-@TestHTTPEndpoint(AIContextController.class)
-class AIContextControllerTest extends AbstractTest {
+@TestHTTPEndpoint(ConfigurationRestController.class)
+class ConfigurationControllerTest extends AbstractTest {
 
-    private static final String AI_CONTEXT_API_BASE_PATH = "/internal/ai/ai-contexts";
     @InjectMockServerClient
     MockServerClient mockServerClient;
 
@@ -48,12 +45,50 @@ class AIContextControllerTest extends AbstractTest {
     }
 
     @Test
-    void getAIContextById_200Test() {
-        AIContext fakeData = createAIContext("1", "Test Context", "desc", "app", 0);
+    void createConfiguration_Test() {
+        CreateConfigurationRequestInternal createRequest = new CreateConfigurationRequestInternal();
+        createRequest.setName("test config");
+        createRequest.setDescription("desc");
+
+        ConfigurationInternal createdConfiguration = new ConfigurationInternal().name("test config").description("desc");
+
+        mockServerClient.when(
+                request().withPath("/internal/configurations")
+                        .withMethod(HttpMethod.POST)
+                        .withBody(JsonBody.json(createRequest)))
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response()
+                        .withStatusCode(Response.Status.CREATED.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(createdConfiguration)));
+
+        CreateConfigurationRequestDTO createDTO = new CreateConfigurationRequestDTO();
+        createDTO.setName("test config");
+        createDTO.setDescription("desc");
+
+        var response = given()
+                .when()
+                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(createDTO)
+                .post()
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .extract()
+                .as(ConfigurationDTO.class);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(createDTO.getName(), response.getName());
+    }
+
+    @Test
+    void getConfigurationById_200Test() {
+        ConfigurationInternal fakeData = new ConfigurationInternal().name("test config").description("desc");
 
         String testId = "1";
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/configurations/" + testId)
                         .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .withId(MOCK_ID)
@@ -71,18 +106,18 @@ class AIContextControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(AIContext.class);
+                .as(ConfigurationInternal.class);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("Test Context", response.getName());
+        Assertions.assertEquals(fakeData.getName(), response.getName());
     }
 
     @Test
-    void getAIContextById_404Test() {
+    void getConfigurationById_404Test() {
         String testId = "non-existent-id";
 
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/configurations/" + testId)
                         .withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
@@ -99,10 +134,10 @@ class AIContextControllerTest extends AbstractTest {
     }
 
     @Test
-    void deleteAIContextTest() {
+    void deleteConfigurationTest() {
         String id = "1";
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + id)
+                request().withPath("/internal/configurations/" + id)
                         .withMethod(HttpMethod.DELETE))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
@@ -118,22 +153,26 @@ class AIContextControllerTest extends AbstractTest {
     }
 
     @Test
-    void updateAIContextTest() {
-        UpdateAIContextRequestDTO updateDTO = new UpdateAIContextRequestDTO();
-        AIContextDTO dataObject = new AIContextDTO();
-        dataObject.setName("Updated Context");
-        updateDTO.setDataObject(dataObject);
+    void updateConfigurationTest() {
+        UpdateConfigurationRequestInternal updateRequest = new UpdateConfigurationRequestInternal();
+        updateRequest.setName("updated name");
+        updateRequest.setModificationCount(0);
 
+        ConfigurationInternal configurationInternal = new ConfigurationInternal().name("updated name");
         String testId = "1";
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + testId)
+                request().withPath("/internal/configurations/" + testId)
+                        .withBody(JsonBody.json(updateRequest))
                         .withMethod(HttpMethod.PUT))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(updateDTO)));
+                        .withBody(JsonBody.json(configurationInternal)));
 
+        UpdateConfigurationRequestDTO updateDTO = new UpdateConfigurationRequestDTO();
+        updateDTO.setName("updated name");
+        updateDTO.setModificationCount(0);
         var response = given()
                 .when()
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
@@ -144,28 +183,17 @@ class AIContextControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(UpdateAIContextRequestDTO.class);
+                .as(ConfigurationDTO.class);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals("Updated Context", response.getDataObject().getName());
+        Assertions.assertEquals(updateDTO.getName(), response.getName());
     }
 
     @Test
-    void updateAIContext_400Test() {
-        UpdateAIContextRequestDTO updateDTO = new UpdateAIContextRequestDTO();
-        AIContextDTO dataObject = new AIContextDTO();
-        dataObject.setName("");
-        updateDTO.setDataObject(dataObject);
-
+    void updateConfiguration_400Test() {
         String testId = "1";
 
-        mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + testId)
-                        .withMethod(HttpMethod.PUT))
-                .withId(MOCK_ID)
-                .respond(httpRequest -> response()
-                        .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode()));
-
+        UpdateConfigurationRequestDTO updateDTO = new UpdateConfigurationRequestDTO();
         given()
                 .when()
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
@@ -178,20 +206,23 @@ class AIContextControllerTest extends AbstractTest {
     }
 
     @Test
-    void updateAIContext_404Test() {
-        UpdateAIContextRequestDTO updateDTO = new UpdateAIContextRequestDTO();
-        AIContextDTO dataObject = new AIContextDTO();
-        dataObject.setName("Updated Context");
-        updateDTO.setDataObject(dataObject);
+    void updateConfiguration_404Test() {
+        UpdateConfigurationRequestInternal updateRequest = new UpdateConfigurationRequestInternal();
+        updateRequest.setName("updated name");
+        updateRequest.setModificationCount(0);
 
         String testId = "non-existent-id";
 
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/" + testId)
-                        .withMethod(HttpMethod.PUT))
+                request().withPath("/internal/configurations/" + testId)
+                        .withMethod(HttpMethod.PUT).withBody(JsonBody.json(updateRequest)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+
+        UpdateConfigurationRequestDTO updateDTO = new UpdateConfigurationRequestDTO();
+        updateDTO.setName("updated name");
+        updateDTO.setModificationCount(0);
 
         given()
                 .when()
@@ -205,74 +236,45 @@ class AIContextControllerTest extends AbstractTest {
     }
 
     @Test
-    void updateAIContextWithoutBody_ConstraintViolation400Test() {
-        // Test constraintException by sending PUT request without body (required field missing)
-        String testId = "1";
+    void searchConfigurationsTest() {
+        ConfigurationSearchCriteriaInternal criteria = new ConfigurationSearchCriteriaInternal();
+        criteria.setName("Test Configuration");
 
-        var updateResponseException = given()
-                .when()
-                .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
-                .put(testId) // No body - violates @NotNull/@Valid constraint
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .extract()
-                .as(ProblemDetailResponseDTO.class);
+        ConfigurationAbstractInternal configuration = new ConfigurationAbstractInternal().name("Test Configuration");
 
-        Assertions.assertNotNull(updateResponseException);
-        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", updateResponseException.getErrorCode());
-    }
-
-    @Test
-    void searchAIContextsTest() {
-        AIContextSearchCriteria criteria = new AIContextSearchCriteria();
-        criteria.setName("Test Context");
-
-        AIContext context1 = createAIContext("1", "Test Context", "desc", "app", 0);
-        AIContext context2 = createAIContext("2", "Test Context", "desc", "app", 0);
-
-        AIContextPageResult responseDTO = new AIContextPageResult();
-        responseDTO.setNumber(0);
-        responseDTO.setSize(10);
-        responseDTO.setTotalPages(1L);
-        responseDTO.setStream(java.util.List.of(context1, context2));
-        responseDTO.setTotalElements(2L);
+        ConfigurationPageResultInternal response = new ConfigurationPageResultInternal();
+        response.setNumber(0);
+        response.setSize(10);
+        response.setTotalPages(1L);
+        response.setStream(java.util.List.of(configuration));
+        response.setTotalElements(1L);
 
         mockServerClient.when(
-                request().withPath(AI_CONTEXT_API_BASE_PATH + "/search")
+                request().withPath("/internal/configurations/search")
                         .withMethod(HttpMethod.POST)
                         .withBody(JsonBody.json(criteria)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response()
                         .withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(responseDTO)));
+                        .withBody(JsonBody.json(response)));
 
+        ConfigurationSearchCriteriaDTO criteriaDTO = new ConfigurationSearchCriteriaDTO().name("Test Configuration");
         var results = given()
                 .when()
                 .auth().oauth2(keycloakTestClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .body(criteria)
+                .body(criteriaDTO)
                 .post("/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .as(AIContextPageResult.class);
+                .as(ConfigurationPageResultDTO.class);
 
         Assertions.assertNotNull(results);
-        Assertions.assertEquals(2L, results.getTotalElements());
-        Assertions.assertEquals("Test Context", results.getStream().get(0).getName());
+        Assertions.assertEquals(1L, results.getTotalElements());
+        Assertions.assertEquals("Test Configuration", results.getStream().get(0).getName());
     }
 
-    private AIContext createAIContext(String id, String name, String description, String appId, int modificationCount) {
-        AIContext context = new AIContext();
-        context.setId(id);
-        context.setName(name);
-        //        context.setDescription(description);
-        //        context.setAppId(appId);
-        context.setModificationCount(modificationCount);
-        return context;
-    }
 }
