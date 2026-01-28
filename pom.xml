@@ -182,7 +182,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <uri>https://raw.githubusercontent.com/onecx-apps/onecx-ai-management-svc/refs/heads/main/src/main/openapi/onecx-ai-internal-openapi.yaml</uri>
+                            <uri>https://raw.githubusercontent.com/onecx-apps/onecx-ai-management-svc/refs/heads/main/src/main/openapi/onecx-ai-internal.yaml</uri>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>ai-management-svc-internal.yaml</outputFileName>
                             <skipCache>true</skipCache>
