@@ -448,6 +448,12 @@ components:
           $ref: '#/components/schemas/ExecutionPolicy'
     MCPServerPageResult:
       type: object
+      required:
+        - totalElements
+        - number
+        - size
+        - totalPages
+        - stream
       properties:
         totalElements:
           format: int64
@@ -635,6 +641,12 @@ components:
           type: string
     ProviderPageResult:
       type: object
+      required:
+        - totalElements
+        - number
+        - size
+        - totalPages
+        - stream
       properties:
         totalElements:
           format: int64
@@ -696,6 +708,9 @@ components:
             $ref: '#/components/schemas/MCPServer'
     ConfigurationAbstract:
       type: object
+      required:
+        - name
+        - id
       properties:
         id:
           type: string
@@ -750,6 +765,12 @@ components:
           type: string
     ConfigurationPageResult:
       type: object
+      required:
+        - totalElements
+        - number
+        - size
+        - totalPages
+        - stream
       properties:
         totalElements:
           format: int64
