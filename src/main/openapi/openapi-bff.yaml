@@ -413,6 +413,10 @@ components:
   schemas:
     MCPServer:
       type: object
+      required:
+        - name
+        - id
+        - modificationCount
       properties:
         modificationCount:
           format: int32
@@ -603,6 +607,8 @@ components:
       required:
         - name
         - modelName
+        - id
+        - modificationCount
       type: object
       properties:
         modificationCount:
@@ -716,6 +722,8 @@ components:
     Configuration:
       required:
         - name
+        - id
+        - modificationCount
       type: object
       properties:
         modificationCount:
