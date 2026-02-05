@@ -118,7 +118,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: AI Configuration not found
-
   /configurations/search:
     post:
       x-onecx:
@@ -141,10 +140,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConfigurationPageResult'
-
+                $ref: '#/components/schemas/ConfigurationPageResult'
   /providers:
     post:
       x-onecx:
@@ -180,7 +176,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-
   /providers/{id}:
     get:
       x-onecx:
@@ -260,7 +255,6 @@ paths:
       responses:
         '204':
           description: No Content
-
   /providers/search:
     post:
       x-onecx:
@@ -283,9 +277,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProviderPageResult'
+                $ref: '#/components/schemas/ProviderPageResult'
   /mcpServer:
     post:
       x-onecx:
@@ -394,7 +386,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: MCP Server not found
-
   /mcpServer/search:
     post:
       x-onecx:
