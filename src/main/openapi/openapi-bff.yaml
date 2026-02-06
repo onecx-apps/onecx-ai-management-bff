@@ -1,14 +1,18 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-ai bff
+  title: onecx-ai-management-bff
+  description: Backend-For-Frontend (BFF) service for onecx-ai-management. This API provides endpoints for managing Configurations, Providers and MCP Servers.
   version: 1.0.0
 servers:
   - url: "http://onecx-ai-management-bff:8080"
 tags:
   - name: configuration
+    description: Managing Configurations
   - name: provider
+    description: Managing Providers
   - name: mcpServer
+    description: Managing MCP Servers
 paths:
   /configurations:
     post:
@@ -18,7 +22,7 @@ paths:
             - write
       tags:
         - configuration
-      summary: Create an AI Configuration
+      description: Create a Configuration
       operationId: createConfiguration
       requestBody:
         required: true
@@ -47,8 +51,8 @@ paths:
             - read
       tags:
         - configuration
-      summary: Get Configuration
-      operationId: getConfiguration
+      description: Get Configuration by its id
+      operationId: getConfigurationById
       parameters:
         - name: id
           in: path
@@ -63,7 +67,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Configuration'
         "404":
-          description: Not found
+          description: Configuration not found
     delete:
       x-onecx:
         permissions:
@@ -71,8 +75,8 @@ paths:
             - delete
       tags:
         - configuration
-      summary: Delete Configuration
-      operationId: deleteConfiguration
+      description: Delete Configuration by its id
+      operationId: deleteConfigurationById
       parameters:
         - name: id
           in: path
@@ -80,8 +84,8 @@ paths:
           schema:
             type: string
       responses:
-        '204':
-          description: AI Configuration deleted
+        "204":
+          description: Configuration deleted successfully
     put:
       x-onecx:
         permissions:
@@ -89,8 +93,8 @@ paths:
             - write
       tags:
         - configuration
-      summary: Update an AI Configuration
-      operationId: updateConfiguration
+      description: Update an Configuration by its id
+      operationId: updateConfigurationById
       parameters:
         - name: id
           in: path
@@ -104,7 +108,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateConfigurationRequest'
       responses:
-        '200':
+        "200":
           description: Configuration updated successfully
           content:
             application/json:
@@ -117,7 +121,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
-          description: AI Configuration not found
+          description: Configuration not found
   /configurations/search:
     post:
       x-onecx:
@@ -126,7 +130,7 @@ paths:
             - read
       tags:
         - configuration
-      summary: Find AI Configuration by Search Criteria
+      description: Find Configuration by Search Criteria
       operationId: findConfigurationBySearchCriteria
       requestBody:
         required: true
@@ -135,12 +139,18 @@ paths:
             schema:
               $ref: '#/components/schemas/ConfigurationSearchCriteria'
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConfigurationPageResult'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /providers:
     post:
       x-onecx:
@@ -149,7 +159,7 @@ paths:
             - write
       tags:
         - provider
-      summary: Create an AI Provider
+      description: Create a Provider
       operationId: createProvider
       requestBody:
         required: true
@@ -159,13 +169,7 @@ paths:
               $ref: '#/components/schemas/CreateProviderRequest'
       responses:
         "201":
-          description: New Provider created
-          headers:
-            Location:
-              required: true
-              schema:
-                type: string
-                format: url
+          description: Provider created successfully
           content:
             application/json:
               schema:
@@ -184,8 +188,8 @@ paths:
             - read
       tags:
         - provider
-      description: Return AI Provider by ID
-      operationId: getProvider
+      description: Return Provider by its ID
+      operationId: getProviderById
       parameters:
         - name: id
           in: path
@@ -200,7 +204,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Provider'
         "404":
-          description: Not found
+          description: Provider not found
     put:
       x-onecx:
         permissions:
@@ -208,8 +212,8 @@ paths:
             - write
       tags:
         - provider
-      summary: Update an AI Provider
-      operationId: updateProvider
+      description: Update a Provider by its id
+      operationId: updateProviderById
       parameters:
         - name: id
           in: path
@@ -223,7 +227,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateProviderRequest'
       responses:
-        '200':
+        "200":
           description: Provider updated successfully
           content:
             application/json:
@@ -236,7 +240,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
-          description: AI Provider not found
+          description: Provider not found
     delete:
       x-onecx:
         permissions:
@@ -244,8 +248,8 @@ paths:
             - delete
       tags:
         - provider
-      summary: Delete an AI Provider
-      operationId: deleteProvider
+      description: Delete a Provider by its id
+      operationId: deleteProviderById
       parameters:
         - name: id
           in: path
@@ -253,8 +257,8 @@ paths:
           schema:
             type: string
       responses:
-        '204':
-          description: No Content
+        "204":
+          description: Provider deleted successfully
   /providers/search:
     post:
       x-onecx:
@@ -263,7 +267,7 @@ paths:
             - read
       tags:
         - provider
-      summary: Find AI Providers by Search Criteria
+      description: Find Providers by Search Criteria
       operationId: findProviderBySearchCriteria
       requestBody:
         required: true
@@ -272,13 +276,19 @@ paths:
             schema:
               $ref: '#/components/schemas/ProviderSearchCriteria'
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProviderPageResult'
-  /mcpServer:
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /mcpServers:
     post:
       x-onecx:
         permissions:
@@ -286,7 +296,7 @@ paths:
             - write
       tags:
         - mcpServer
-      summary: Create an MCP Server
+      description: Create an MCP Server
       operationId: createMCPServer
       requestBody:
         required: true
@@ -307,7 +317,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /mcpServer/{id}:
+  /mcpServers/{id}:
     get:
       x-onecx:
         permissions:
@@ -315,7 +325,7 @@ paths:
             - read
       tags:
         - mcpServer
-      summary: Get MCP Server by id
+      description: Get MCP Server by its id
       operationId: getMCPServerById
       parameters:
         - name: id
@@ -331,7 +341,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MCPServer'
         "404":
-          description: Not found
+          description: MCP Server not found
     delete:
       x-onecx:
         permissions:
@@ -339,7 +349,7 @@ paths:
             - delete
       tags:
         - mcpServer
-      summary: Delete MCP Server by id
+      description: Delete MCP Server by its id
       operationId: deleteMCPServerById
       parameters:
         - name: id
@@ -348,7 +358,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: MCP Server deleted successfully
     put:
       x-onecx:
@@ -357,7 +367,7 @@ paths:
             - write
       tags:
         - mcpServer
-      summary: Update an MCP Server
+      description: Update a MCP Server by its id
       operationId: updateMCPServerById
       parameters:
         - name: id
@@ -372,7 +382,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateMCPServerRequest'
       responses:
-        '200':
+        "200":
           description: MCP Server updated successfully
           content:
             application/json:
@@ -386,7 +396,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: MCP Server not found
-  /mcpServer/search:
+  /mcpServers/search:
     post:
       x-onecx:
         permissions:
@@ -394,8 +404,8 @@ paths:
             - read
       tags:
         - mcpServer
-      summary: Find MCPServer by Search Criteria
-      operationId: findMCPServerByCriteria
+      description: Find MCP Server by Search Criteria
+      operationId: findMCPServerBySearchCriteria
       requestBody:
         required: true
         content:
@@ -403,12 +413,18 @@ paths:
             schema:
               $ref: '#/components/schemas/MCPServerSearchCriteria'
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MCPServerPageResult'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     MCPServer:
@@ -473,6 +489,8 @@ components:
           type: string
         name:
           type: string
+        description:
+          type: string
         url:
           type: string
         apiKey:
@@ -526,6 +544,8 @@ components:
           type: string
         name:
           type: string
+        description:
+          type: string
         type:
           $ref: '#/components/schemas/ProviderType'
         llmUrl:
@@ -551,6 +571,8 @@ components:
         id:
           type: string
         name:
+          type: string
+        description:
           type: string
         pageNumber:
           format: int32
