@@ -50,7 +50,7 @@ public class MCPServerRestController implements McpServerApiService {
     }
 
     @Override
-    public Response findMCPServerByCriteria(MCPServerSearchCriteriaDTO mcPServerSearchCriteriaDTO) {
+    public Response findMCPServerBySearchCriteria(MCPServerSearchCriteriaDTO mcPServerSearchCriteriaDTO) {
         MCPServerSearchCriteriaInternal searchCriteria = mapper.mapCriteria(mcPServerSearchCriteriaDTO);
         try (Response searchResponse = mcpServerInternalApi.findMCPServerByCriteria(searchCriteria)) {
             MCPServerPageResultInternal mcpServerPageResult = searchResponse

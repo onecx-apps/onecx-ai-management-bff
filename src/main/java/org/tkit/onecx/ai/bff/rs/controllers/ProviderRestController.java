@@ -46,7 +46,7 @@ public class ProviderRestController implements ProviderApiService {
     }
 
     @Override
-    public Response deleteProvider(String id) {
+    public Response deleteProviderById(String id) {
         try (Response response = providerInternalApi.deleteProvider(id)) {
             return Response.status(response.getStatus()).build();
         }
@@ -63,7 +63,7 @@ public class ProviderRestController implements ProviderApiService {
     }
 
     @Override
-    public Response getProvider(String id) {
+    public Response getProviderById(String id) {
         try (Response response = providerInternalApi.getProvider(id)) {
             ProviderInternal provider = response.readEntity(ProviderInternal.class);
             return Response.status(response.getStatus()).entity(providerMapper.map(provider)).build();
@@ -71,7 +71,7 @@ public class ProviderRestController implements ProviderApiService {
     }
 
     @Override
-    public Response updateProvider(String id, UpdateProviderRequestDTO updateProviderRequestDTO) {
+    public Response updateProviderById(String id, UpdateProviderRequestDTO updateProviderRequestDTO) {
         UpdateProviderRequestInternal updateProviderRequest = providerMapper
                 .mapUpdate(updateProviderRequestDTO);
         try (Response updateResponse = providerInternalApi.updateProvider(id,

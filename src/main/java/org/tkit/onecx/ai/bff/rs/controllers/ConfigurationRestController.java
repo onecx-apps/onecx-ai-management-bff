@@ -46,7 +46,7 @@ public class ConfigurationRestController implements ConfigurationApiService {
     }
 
     @Override
-    public Response deleteConfiguration(String id) {
+    public Response deleteConfigurationById(String id) {
         try (Response response = configurationInternalApi.deleteConfiguration(id)) {
             return Response.status(response.getStatus()).build();
         }
@@ -64,7 +64,7 @@ public class ConfigurationRestController implements ConfigurationApiService {
     }
 
     @Override
-    public Response getConfiguration(String id) {
+    public Response getConfigurationById(String id) {
         try (Response response = configurationInternalApi.getConfiguration(id)) {
             ConfigurationInternal configuration = response.readEntity(ConfigurationInternal.class);
             ConfigurationDTO configurationDTO = configurationMapper.map(configuration);
@@ -73,7 +73,7 @@ public class ConfigurationRestController implements ConfigurationApiService {
     }
 
     @Override
-    public Response updateConfiguration(String id, UpdateConfigurationRequestDTO updateConfigurationRequestDTO) {
+    public Response updateConfigurationById(String id, UpdateConfigurationRequestDTO updateConfigurationRequestDTO) {
         UpdateConfigurationRequestInternal updateConfigurationRequest = configurationMapper
                 .mapUpdate(updateConfigurationRequestDTO);
         try (Response updateResponse = configurationInternalApi.updateConfiguration(id,
